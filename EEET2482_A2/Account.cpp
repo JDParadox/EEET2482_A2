@@ -35,7 +35,6 @@ Account::Account(string id, string name, string address, string phone, int numRe
 }
 
 Account::~Account() {
-
 }
 
 string Account::getId() {
@@ -57,6 +56,7 @@ string Account::getPhone() {
 int Account::getNumRented() {
 	return this->numRented;
 }
+
 int Account::getNumReturned() {
 	return this->numReturned;
 }
@@ -83,4 +83,13 @@ void Account::setNumRented(int numRented) {
 
 void Account::setNumReturned(int numReturned) {
 	this->numReturned = numReturned;
+}
+
+// LinkedList methods
+Account* Account::getNext() {
+	return this->next;
+}
+
+void Account::setNext(Account* next) {
+	this->next = next;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "Item.h"
 
 class ItemLinkedList
@@ -11,7 +13,10 @@ public:
 	ItemLinkedList(Item* item);
 	~ItemLinkedList();
 
-	void push(Item* item);
+	friend ostream& operator<<(ostream& os, ItemLinkedList& list);
+
+	void add(Item* item);
 	//void removeTail(); 
-	void display();
+	void displayAll();
+	Item* findById(string id);
 };

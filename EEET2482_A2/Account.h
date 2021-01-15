@@ -35,6 +35,12 @@ public:
 	// Methods
 	virtual bool renting(Item* item) = 0;
 	virtual bool returning(Item* item) = 0;
+	virtual bool addItem(Item* item) = 0;
+	virtual void printItems() = 0;
+
+	// LinkedList Node
+	Account* getNext();
+	void setNext(Account* next);
 
 protected:
 	string id;
@@ -43,4 +49,7 @@ protected:
 	string phone;
 	int numRented; // This is number of currently rented items
 	int numReturned; // This is number of items returned in total over lifetime
+
+	// LinkedList
+	Account* next;
 };

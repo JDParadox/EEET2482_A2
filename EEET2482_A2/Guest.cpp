@@ -28,3 +28,23 @@ bool Guest::renting(Item* item) {
 bool Guest::returning(Item* item) {
 	return true;
 }
+
+bool Guest::addItem(Item* item) {
+	rentList2.add(item);
+	//cout << item->getId() << " added to " << id << endl;
+	return true;
+	/*for (int i = 0; i < MAXRENT; i++) {
+		if (rentList[i] == NULL) {
+			rentList[i] = item;
+			return true;
+		}
+	}*/
+}
+
+void Guest::printItems() {
+	/*for (int i = 0; i < MAXRENT; i++) {
+		if (rentList[i] == NULL) {
+			cout << rentList[i];
+		}
+	}*/
+}

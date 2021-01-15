@@ -10,6 +10,7 @@
 #include "Item.h"
 
 #include "ItemLinkedList.h"
+#include "AccountLinkedList.h"
 
 using namespace std;
 
@@ -125,86 +126,120 @@ int main(int argc, char* argv[])
 	//Item* itemList = new Item[1];
 	ItemLinkedList itemList;
 
-	string s;
-	while (getline(itemFileStr, s)) {
-		if (s[0] != '#') {
-
-			string tempId = "N/A";
-			string tempTitle = "N/A";
-			string tempRentType = "N/A";
-			string tempLoanType = "N/A";
-			int tempStock = 0;
-			double tempFee = 0;
-			string tempGenre = "N/A";
-
-			size_t found;
-
-			found = s.find(',');
-			if (found != string::npos) {
-				tempId = s.substr(0, found);
-				s.erase(0, found + 1);
-			}
-
-			found = s.find(',');
-			if (found != string::npos) {
-				tempTitle = s.substr(0, found);
-				s.erase(0, found + 1);
-			}
-
-			found = s.find(',');
-			if (found != string::npos) {
-				tempRentType = s.substr(0, found);
-				s.erase(0, found + 1);
-			}
-
-			found = s.find(',');
-			if (found != string::npos) {
-				tempLoanType = s.substr(0, found);
-				s.erase(0, found + 1);
-			}
-
-			found = s.find(',');
-			if (found != string::npos) {
-				tempStock = stoi(s.substr(0, found));
-				s.erase(0, found + 1);
-			}
-
-			if (tempRentType != "Game") {
-				found = s.find(',');
-				if (found != string::npos) {
-					tempFee = stod(s.substr(0, found));
-					s.erase(0, found + 1);
-				}
-				tempGenre = s;
-			}
-			else {
-				tempFee = stod(s);
-			}
-
-			Item item(tempId, tempTitle, tempRentType, tempLoanType, tempStock, tempFee, tempGenre);
-
-			cout << item << endl;
-			itemList.push(&item);
+	string s1;
+	while (getline(itemFileStr, s1)) {
+		if (s1[0] != '#') {
+			Item temp = parseItem(s1);
+			Item *item = new Item();
+			item->setAll(temp.getId(), temp.getTitle(), temp.getRentType(), temp.getLoanType(), temp.getStock(), temp.getRentFee(), temp.getGenre()); // Fix this later. This isn't very efficient
+			itemList.add(item);
 		}
 	}
 
-	itemList.display();
-
-	//DEBUG
-	/*Item i1("001", "hello world", "eh", "eh", 3, 1.99);
-	Item i2("002", "hello world2", "eh", "eh", 3, 1.99);
-	Item i3("003", "hello world2", "eh", "eh", 3, 1.99);
-	Item i4("004", "hello world2", "eh", "eh", 3, 1.99);
-
-	itemList.push(&i1);
-	itemList.push(&i2);
-	itemList.push(&i3);
-	itemList.push(&i4);
-
-	itemList.display();*/
+	itemList.displayAll();
 
 	// Loads the customers into a dynamic array or linked list?
-	Account** accountList = new Account*[1];
+	AccountLinkedList accountList;
+
+	string s2;
+	Account* currentPtr = NULL;
+	while (getline(cusFileStr, s2)) {
+		if (s2[0] != '#') {
+			if (s2[0] == 'C') {
+
+				if (currentPtr != NULL) {
+					accountList.add(currentPtr);
+				}
+
+				string tempId = "N/A";
+				string tempName = "N/A";
+				string tempAddress = "N/A";
+				string tempPhone = "N/A";
+				int numRented = 0;
+				int numReturned = 0;
+				string type = "N/A";
+
+				size_t found;
+
+				found = s2.find(',');
+				if (found != string::npos) {
+					tempId = s2.substr(0, found);
+					s2.erase(0, found + 1);
+				}
+
+				found = s2.find(',');
+				if (found != string::npos) {
+					tempName = s2.substr(0, found);
+					s2.erase(0, found + 1);
+				}
+
+				found = s2.find(',');
+				if (found != string::npos) {
+					tempAddress = s2.substr(0, found);
+					s2.erase(0, found + 1);
+				}
+
+				found = s2.find(',');
+				if (found != string::npos) {
+					tempPhone = s2.substr(0, found);
+					s2.erase(0, found + 1);
+				}
+
+				found = s2.find(',');
+				if (found != string::npos) {
+					numReturned = stoi(s2.substr(0, found));
+					s2.erase(0, found + 1);
+				}
+
+				type = s2;
+
+				if (type == "Guest") {
+					currentPtr = new Guest(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+				}
+				else if (type == "Regular") {
+					currentPtr = new Guest(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+				}
+				else if (type == "VIP") {
+					currentPtr = new Guest(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+				}
+			}
+			else if ((s2[0] == 'I') && (currentPtr != NULL)){
+				Item* ptr = itemList.findById(s2);
+				if (ptr != NULL) {
+					currentPtr->addItem(ptr);
+				}
+				else {
+					cout << "failed to find " << s2 << endl;
+				}
+			}
+			else {
+				cout << "Invalid line";
+			}
+		}
+			
+	}
+
+	//accountList.displayAll();
+
+	//Account* ptr = accountList.findById("C001");
+
+	/*Item* ptr = itemList.findById("I001-2001");
+	if (ptr != NULL) {
+		cout << "yes";
+	}
+	else {
+		cout << "failed to find " << s2 << endl;
+	}*/
+
+	//string s1;
+	//while (getline(itemFileStr, s1)) {
+	//	if (s1[0] != '#') {
+	//		Item temp = parseItem(s1);
+	//		Item* item = new Item();
+	//		item->setAll(temp.getId(), temp.getTitle(), temp.getRentType(), temp.getLoanType(), temp.getStock(), temp.getRentFee(), temp.getGenre()); // Fix this later. This isn't very efficient
+	//		itemList.add(item);
+	//	}
+	//}
 
 	printDivider();
 
@@ -224,11 +259,6 @@ int main(int argc, char* argv[])
 	}*/
 
 	// Cleanup code goes here
-	/*delete[] itemList;
-	itemList = NULL;*/
-
-	delete[] accountList;
-	accountList = NULL;
 
 
 	cout << "ASSIGNMENT 2 GROUP 9" << endl;

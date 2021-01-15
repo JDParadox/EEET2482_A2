@@ -46,8 +46,18 @@ Item::Item(string id, string title, string rentType, string loanType, int stock,
 	this->genre = genre;
 }
 
-Item::~Item() {
+Item::Item(const Item& item) {
+	this->id = item.id;
+	this->title = item.title;
+	this->rentType = item.rentType;
+	this->loanType = item.loanType;
+	this->stock = item.stock;
+	this->rentFee = item.rentFee;
+	this->rentStatus = item.rentStatus;
+	this->genre = item.genre;
+}
 
+Item::~Item() {
 }
 
 ostream& operator<<(ostream& os, Item& item)
@@ -117,6 +127,22 @@ void Item::setRentStatus(string rentStatus) {
 }
 
 void Item::setGenre(string genre) {
+	this->genre = genre;
+}
+
+void Item::setAll(string id, string title, string rentType, string loanType, int stock, double rentFee, string genre) {
+	this->id = id;
+	this->title = title;
+	this->rentType = rentType;
+	this->loanType = loanType;
+	this->stock = stock;
+	this->rentFee = rentFee;
+	if (stock <= 0) {
+		this->rentStatus = "borrowed";
+	}
+	else {
+		this->rentStatus = "available";
+	}
 	this->genre = genre;
 }
 

@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
+    <ClCompile Include="AccountLinkedList.cpp" />
     <ClCompile Include="EEET2482_A2.cpp" />
     <ClCompile Include="Guest.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h" />
+    <ClInclude Include="AccountLinkedList.h" />
     <ClInclude Include="Guest.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemLinkedList.h" />
