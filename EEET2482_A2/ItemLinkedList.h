@@ -38,4 +38,5 @@ public:
 	void displayAllFormatted();
 	void displayOutOfStockFormatted();
 	Item* findById(string id);
+	Item* findByTitle(string title);
 };

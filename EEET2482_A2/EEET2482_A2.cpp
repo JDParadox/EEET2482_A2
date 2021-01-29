@@ -96,19 +96,65 @@ void printMainMenu() {
 	cout << "Type 'Exit' to quit the program." << endl;
 }
 
-void printItemCRUD() {
-	cout << "Enter an option below" << endl;
-	cout << "1.Add a new item" << endl;
-	cout << "2.Update an existing item" << endl;
-	cout << "3.Delete an existing item" << endl;
-	cout << "Type 'Exit' to return" << endl;
+void itemCRUD() {
+	while (true) {
+		string userInput;
+		cout << "Enter an option below" << endl;
+		cout << "1.Add a new item" << endl;
+		cout << "2.Update an existing item" << endl;
+		cout << "3.Delete an existing item" << endl;
+		cout << "Type 'Exit' to return" << endl;
+		cout << "Input: ";
+		cin >> userInput;
+		printDivider();
+		if (userInput == "exit" || userInput == "Exit") {
+			break;
+		}
+		else if (userInput == "1") {
+			// Add item
+			cout << "Adding a new item. Type 'cancel' at anytime to stop" << endl;
+		}
+		else if (userInput == "2") {
+			// Return item
+			cout << 5;
+		}
+		else if (userInput == "3") {
+			// Return item
+			cout << 5;
+		}
+		else {
+			cout << "Invalid option. Please try again" << endl;
+			printDivider();
+		}
+	}
 }
 
-void printUserCRUD() {
-	cout << "Enter an option below" << endl;
-	cout << "1.Add a new acount" << endl;
-	cout << "2.Update an existing account" << endl;
-	cout << "Type 'Exit' to return" << endl;
+void userCRUD() {
+	while (true) {
+		string userInput;
+		cout << "Enter an option below" << endl;
+		cout << "1.Add a new acount" << endl;
+		cout << "2.Update an existing account" << endl;
+		cout << "Type 'Exit' to return" << endl;
+		cout << "Input: ";
+		cin >> userInput;
+		printDivider();
+		if (userInput == "exit" || userInput == "Exit") {
+			break;
+		}
+		else if (userInput == "1") {
+			// Rent item
+			cout << 4;
+		}
+		else if (userInput == "2") {
+			// Return item
+			cout << 5;
+		}
+		else {
+			cout << "Invalid option. Please try again" << endl;
+			printDivider();
+		}
+	}	
 }
 
 int main(int argc, char* argv[])
@@ -252,27 +298,11 @@ int main(int argc, char* argv[])
 		}
 		else if (userInput == "1") {
 			// Items CRUD
-			while (true) {
-				printItemCRUD();
-				cout << "Input: ";
-				cin >> userInput;
-				printDivider();
-				if (userInput == "exit" || userInput == "Exit") {
-					break;
-				}
-			}
+			itemCRUD();
 		}
 		else if (userInput == "2") {
 			// Account CRUD
-			while (true) {
-				printUserCRUD();
-				cout << "Input: ";
-				cin >> userInput;
-				printDivider();
-				if (userInput == "exit" || userInput == "Exit") {
-					break;
-				}
-			}
+			userCRUD();
 		}
 		else if (userInput == "3") {
 			// Promote customer
@@ -390,10 +420,10 @@ int main(int argc, char* argv[])
 			// Search for items or customers
 			while (true) {
 				cout << "Enter an option below" << endl;
-				cout << "1.Search for items by ID" << endl;
-				cout << "2.Search for items by Name" << endl;
-				cout << "3.Search for customers by ID" << endl;
-				cout << "4.Search for customer by Name" << endl;
+				cout << "1.Search for an item by ID" << endl;
+				cout << "2.Search for an item by Title" << endl;
+				cout << "3.Search for a customer by ID" << endl;
+				cout << "4.Search for a customer by Name" << endl;
 				cout << "Type 'Exit' to return" << endl;
 				cout << "Input: ";
 				cin >> userInput;
@@ -402,19 +432,63 @@ int main(int argc, char* argv[])
 					break;
 				}
 				else if (userInput == "1") {
-					cout << "Search for items by id";
+					cout << "Please input the item's ID (Case-Sensitive): ";
+					cin >> userInput;
+					printDivider();
+					Item* found = itemList.findById(userInput);
+					if (found != NULL) {
+						cout << "Item Found" << endl;
+						cout << *found << endl;
+					}
+					else {
+						cout << "No item found with ID " << userInput << ". Please try again" << endl;
+					}
 					printDivider();
 				}
 				else if (userInput == "2") {
-					cout << "Search for items by name";
+					string title;
+					cout << "Please input the item's title (Case-Sensitive): ";
+					cin.ignore();
+					getline(cin, title);
+					printDivider();
+					Item* found = itemList.findByTitle(title);
+					if (found != NULL) {
+						cout << "Item Found" << endl;
+						cout << *found << endl;
+					}
+					else {
+						cout << "No items found with title " << title << ". Please try again" << endl;
+					}
 					printDivider();
 				}
 				else if (userInput == "3") {
-					cout << "Search for customers by id";
+					cout << "Please input the customer's ID (Case-Sensitive): ";
+					cin >> userInput;
+					printDivider();
+					Account* found = accountList.findById(userInput);
+					if (found != NULL) {
+						cout << "Customer Found" << endl;
+						cout << found->getId() << " | " << found->getName() << " | " << found->getAddress() << " | " << found->getPhone() << " | " << found->getNumReturned() << endl;
+					}
+					else {
+						cout << "No customers found with ID " << userInput << ". Please try again" << endl;
+					}
 					printDivider();
 				}
 				else if (userInput == "4") {
-					cout << "Search for customers by name";
+					string name;
+					cout << "Please input the customer's name (Case-Sensitive): ";
+					cin.ignore();
+					getline(cin, name);
+					printDivider();
+					Account* found = accountList.findByName(name);
+					if (found != NULL) {
+						cout << "Customer Found" << endl;
+						cout << found->getId() << " | " << found->getName() << " | " << found->getAddress() << " | " << found->getPhone() << " | " << found->getNumReturned() << endl;
+					}
+					else {
+						cout << "No customers found with name " << name << ". Please try again" << endl;
+					}
 					printDivider();
 				}
 				else {

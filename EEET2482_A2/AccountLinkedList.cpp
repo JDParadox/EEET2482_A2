@@ -321,3 +321,27 @@ Account* AccountLinkedList::findById(string id) {
 	}
 	return NULL;
 }
+
+Account* AccountLinkedList::findByName(string name) {
+	int index = 0;
+	AccountNode* currentPtr = head;
+	/*if (currentPtr == NULL) cout << "List is empty" << endl;
+	else {
+		while (currentPtr != NULL) {
+			if (currentPtr->getId() == id) return currentPtr;
+			else currentPtr = currentPtr->getNext();
+		}
+		return NULL;
+	}*/
+
+	while (currentPtr != NULL) {
+		//cout << id << " " << currentPtr->getData()->getId() << endl;
+		if (currentPtr->getData()->getName().compare(name) == 0) {
+			//If element found return index
+			return currentPtr->getData();
+		}
+		currentPtr = currentPtr->getNext();
+		index++;
+	}
+	return NULL;
+}

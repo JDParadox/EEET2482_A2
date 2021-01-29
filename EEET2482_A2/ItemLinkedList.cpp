@@ -214,3 +214,27 @@ Item* ItemLinkedList::findById(string id) {
 	}
 	return NULL;
 }
+
+Item* ItemLinkedList::findByTitle(string title) {
+	int index = 0;
+	ItemNode* currentPtr = head;
+	/*if (currentPtr == NULL) cout << "List is empty" << endl;
+	else {
+		while (currentPtr != NULL) {
+			if (currentPtr->getId() == id) return currentPtr;
+			else currentPtr = currentPtr->getNext();
+		}
+		return NULL;
+	}*/
+
+	while (currentPtr != NULL) {
+		//cout << id << " " << currentPtr->getData()->getId() << endl;
+		if (currentPtr->getData()->getTitle().compare(title) == 0) {
+			//If element found return index
+			return currentPtr->getData();
+		}
+		currentPtr = currentPtr->getNext();
+		index++;
+	}
+	return NULL;
+}

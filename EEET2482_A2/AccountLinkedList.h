@@ -44,4 +44,5 @@ public:
 	void displayAllRegFormatted();
 	void displayAllVIPFormatted();
 	Account* findById(string id);
+	Account* findByName(string name);
 };
