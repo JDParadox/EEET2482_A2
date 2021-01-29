@@ -2,26 +2,28 @@
 
 #include <iostream>
 
+#include "LinkedList.h"
 #include "Item.h"
 
-class Node {
+class ItemNode : public Node {
 	Item* data;
-	Node* next;
+	ItemNode* next;
 
 public:
-	Node();
-	Node(Item* item);
+	ItemNode();
+	ItemNode(Item* item);
 
-	Node* getNext();
+	ItemNode* getNext();
 	Item* getData();
 
-	void setNext(Node* next);
+	void setNext(ItemNode* next);
 	void setData(Item* item);
 };
 
-class ItemLinkedList
+class ItemLinkedList : public LinkedList
 {
-	Node* head;
+	ItemNode* head;
+	size_t longestTitle;
 
 public:
 	ItemLinkedList();
@@ -33,5 +35,7 @@ public:
 	void add(Item* item);
 	//void removeTail(); 
 	void displayAll();
+	void displayAllFormatted();
+	void displayOutOfStockFormatted();
 	Item* findById(string id);
 };

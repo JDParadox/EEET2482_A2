@@ -7,6 +7,8 @@
 
 #include "Account.h"
 #include "Guest.h"
+#include "Regular.h"
+#include "VIP.h"
 #include "Item.h"
 
 #include "ItemLinkedList.h"
@@ -91,7 +93,22 @@ void printMainMenu() {
 	cout << "8.Display all customers:" << endl;
 	cout << "9.Display group of customers" << endl;
 	cout << "10.Search items or customers" << endl;
-	cout << "Exit." << endl;
+	cout << "Type 'Exit' to quit the program." << endl;
+}
+
+void printItemCRUD() {
+	cout << "Enter an option below" << endl;
+	cout << "1.Add a new item" << endl;
+	cout << "2.Update an existing item" << endl;
+	cout << "3.Delete an existing item" << endl;
+	cout << "Type 'Exit' to return" << endl;
+}
+
+void printUserCRUD() {
+	cout << "Enter an option below" << endl;
+	cout << "1.Add a new acount" << endl;
+	cout << "2.Update an existing account" << endl;
+	cout << "Type 'Exit' to return" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -147,10 +164,6 @@ int main(int argc, char* argv[])
 		if (s2[0] != '#') {
 			if (s2[0] == 'C') {
 
-				if (currentPtr != NULL) {
-					accountList.add(currentPtr);
-				}
-
 				string tempId = "N/A";
 				string tempName = "N/A";
 				string tempAddress = "N/A";
@@ -195,12 +208,15 @@ int main(int argc, char* argv[])
 
 				if (type == "Guest") {
 					currentPtr = new Guest(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+					accountList.add(currentPtr);
 				}
 				else if (type == "Regular") {
-					currentPtr = new Guest(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+					currentPtr = new Regular(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+					accountList.add(currentPtr);
 				}
 				else if (type == "VIP") {
-					currentPtr = new Guest(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+					currentPtr = new VIP(tempId, tempName, tempAddress, tempPhone, numRented, numReturned);
+					accountList.add(currentPtr);
 				}
 			}
 			else if ((s2[0] == 'I') && (currentPtr != NULL)){
@@ -213,40 +229,206 @@ int main(int argc, char* argv[])
 				}
 			}
 			else {
-				cout << "Invalid line";
+				cout << "Invalid line. Skipping";
 			}
 		}
 			
 	}
 
 	//accountList.displayAll();
-
-	//string s1;
-	//while (getline(itemFileStr, s1)) {
-	//	if (s1[0] != '#') {
-	//		Item temp = parseItem(s1);
-	//		Item* item = new Item();
-	//		item->setAll(temp.getId(), temp.getTitle(), temp.getRentType(), temp.getLoanType(), temp.getStock(), temp.getRentFee(), temp.getGenre()); // Fix this later. This isn't very efficient
-	//		itemList.add(item);
-	//	}
-	//}
+	accountList.displayAll();
 
 	printDivider();
 
-	/*while (true) {
+	while (true) {
 		string userInput;
 		printMainMenu();
 		cout << "Input: ";
 		cin >> userInput;
 		printDivider();
-		if (userInput == "exit") {
+		if (userInput == "exit" || userInput == "Exit") {
 			cout << "Program exiting" << endl;
 			break;
 		}
 		else if (userInput == "1") {
-			cout << "Option 1" << endl;
+			// Items CRUD
+			while (true) {
+				printItemCRUD();
+				cout << "Input: ";
+				cin >> userInput;
+				printDivider();
+				if (userInput == "exit" || userInput == "Exit") {
+					break;
+				}
+			}
 		}
-	}*/
+		else if (userInput == "2") {
+			// Account CRUD
+			while (true) {
+				printUserCRUD();
+				cout << "Input: ";
+				cin >> userInput;
+				printDivider();
+				if (userInput == "exit" || userInput == "Exit") {
+					break;
+				}
+			}
+		}
+		else if (userInput == "3") {
+			// Promote customer
+			while (true) {
+				accountList.displayAllFormatted();
+				cout << "All customers:" << endl;
+				cout << "Please input the ID of the customer you would like to promote. Type 'Exit' to return" << endl;
+				cout << "Input: ";
+				cin >> userInput;
+				printDivider();
+				if (userInput == "exit" || userInput == "Exit") {
+					break;
+				}
+				else {
+					Account* ptr = accountList.findById(userInput);
+					if (ptr == NULL) {
+						cout << "No customers found with that ID. Please try again" << endl;
+					}
+					else {
+						if (ptr->getType() == "VIP") {
+							cout << "The selected customer (" << ptr->getId() << ") is already at VIP status" << endl;
+						}
+						else {
+							if (ptr->getNumReturned() >= 3) {
+								if (ptr->getType() == "regular") {
+									Account* newAcc = new VIP(ptr);
+									newAcc->setNumReturned(newAcc->getNumReturned() - 3); // Lowering num of successful returns so customer can't just be promoted twice
+									accountList.add(newAcc);
+									cout << "The selected customer (" << ptr->getId() << ") has been promoted to VIP status" << endl;
+									accountList.remove(ptr);
+
+								}
+								else if (ptr->getType() == "guest") {
+									Account* newAcc = new Regular(ptr);
+									newAcc->setNumReturned(newAcc->getNumReturned() - 3); // Lowering num of successful returns so customer can't just be promoted twice
+									accountList.add(newAcc);
+									cout << "The selected customer (" << ptr->getId() << ") has been promoted to regular status" << endl;
+									accountList.remove(ptr);
+								}
+							}
+							else {
+								cout << "The selected customer (" << ptr->getId() << ") has not completed enough rentals" << endl;
+							}
+						}
+					}
+				}
+			}
+			
+		}
+		else if (userInput == "4") {
+			// Rent item
+			cout << 4;
+		}
+		else if (userInput == "5") {
+			// Return item
+			cout << 5;
+		}
+		else if (userInput == "6") {
+			// Display all items
+			cout << "All items:" << endl;
+			itemList.displayAllFormatted();
+			printDivider();
+		}
+		else if (userInput == "7") {
+			// Display out-of-stock items
+			cout << "Ttems currently out of stock:" << endl;
+			itemList.displayOutOfStockFormatted();
+			printDivider();
+		}
+		else if (userInput == "8") {
+			// Display all customers
+			cout << "All customers:" << endl;
+			accountList.displayAllFormatted();
+			printDivider();
+		}
+		else if (userInput == "9") {
+			// Display groups of customers
+			while (true) {
+				cout << "Enter an option below" << endl;
+				cout << "1.Display all Guest accounts" << endl;
+				cout << "2.Display all Regular accounts" << endl;
+				cout << "3.Display all VIP accounts" << endl;
+				cout << "Type 'Exit' to return" << endl;
+				cout << "Input: ";
+				cin >> userInput;
+				printDivider();
+				if (userInput == "exit" || userInput == "Exit") {
+					break;
+				}
+				else if (userInput == "1") {
+					// Display guests customers
+					cout << "All customers:" << endl;
+					accountList.displayAllGuestFormatted();
+					printDivider();
+				}
+				else if (userInput == "2") {
+					// Display display regular customers
+					cout << "All customers:" << endl;
+					accountList.displayAllRegFormatted();
+					printDivider();
+				}
+				else if (userInput == "3") {
+					// Display VIP customers
+					cout << "All customers:" << endl;
+					accountList.displayAllVIPFormatted();
+					printDivider();
+				}
+				else {
+					cout << "Invalid option. Please try again" << endl;
+					printDivider();
+				}
+			}
+		}
+		else if (userInput == "10") {
+			// Search for items or customers
+			while (true) {
+				cout << "Enter an option below" << endl;
+				cout << "1.Search for items by ID" << endl;
+				cout << "2.Search for items by Name" << endl;
+				cout << "3.Search for customers by ID" << endl;
+				cout << "4.Search for customer by Name" << endl;
+				cout << "Type 'Exit' to return" << endl;
+				cout << "Input: ";
+				cin >> userInput;
+				printDivider();
+				if (userInput == "exit" || userInput == "Exit") {
+					break;
+				}
+				else if (userInput == "1") {
+					cout << "Search for items by id";
+					printDivider();
+				}
+				else if (userInput == "2") {
+					cout << "Search for items by name";
+					printDivider();
+				}
+				else if (userInput == "3") {
+					cout << "Search for customers by id";
+					printDivider();
+				}
+				else if (userInput == "4") {
+					cout << "Search for customers by name";
+					printDivider();
+				}
+				else {
+					cout << "Invalid option. Please try again" << endl;
+					printDivider();
+				}
+			}
+			
+		}
+		else {
+			cout << "Invalid option. Please try again" << endl;
+			printDivider();
+		}
+	}
 
 	// Cleanup code goes here
 

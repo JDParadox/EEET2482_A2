@@ -145,6 +145,7 @@
     <ClCompile Include="Guest.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemLinkedList.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="Regular.cpp" />
     <ClCompile Include="VIP.cpp" />
   </ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="Guest.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemLinkedList.h" />
+    <ClInclude Include="LinkedList.h" />
     <ClInclude Include="Regular.h" />
     <ClInclude Include="VIP.h" />
   </ItemGroup>

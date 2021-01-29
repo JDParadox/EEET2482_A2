@@ -24,12 +24,6 @@ public:
 	// Methods
 	bool renting(Item* item);
 	bool returning(Item* item);
-	bool addItem(Item* item); // System methods for adding an item to list without messages
-	bool removeItem(Item* item); // System methods for removing an item from list without messages
-
-	void printItems();
 
 private:
-	Item* rentList[MAXRENT];
-	ItemLinkedList rentList2;
 };

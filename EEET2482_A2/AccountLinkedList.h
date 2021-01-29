@@ -4,11 +4,30 @@
 
 #include <iostream>
 
+#include "LinkedList.h"
 #include "Account.h"
 
-class AccountLinkedList
+class AccountNode : public Node {
+	Account* data;
+	AccountNode* next;
+
+public:
+	AccountNode();
+	AccountNode(Account* acc);
+
+	AccountNode* getNext();
+	Account* getData();
+
+	void setNext(AccountNode* next);
+	void setData(Account* acc);
+};
+
+class AccountLinkedList : public LinkedList
 {
-	Account* head;
+	AccountNode* head;
+	size_t longestName;
+	size_t longestAddress;
+	size_t longestPhone;
 
 public:
 	AccountLinkedList();
@@ -18,7 +37,11 @@ public:
 	friend ostream& operator<<(ostream& os, AccountLinkedList& list);
 
 	void add(Account* account);
-	//void removeTail(); 
+	void remove(Account* account); // Deletes the account from memory too;
 	void displayAll();
+	void displayAllFormatted();
+	void displayAllGuestFormatted();
+	void displayAllRegFormatted();
+	void displayAllVIPFormatted();
 	Account* findById(string id);
 };

@@ -12,9 +12,10 @@ Account::Account() {
 	this->phone = "N/A";
 	this->numRented = 0;
 	this->numReturned = 0;
+	this->type = "N/A";
 }
 
-Account::Account(string id, string name, string address, string phone) {
+Account::Account(string id, string name, string address, string phone, string type) {
 	// Constructor for new account
 	this->id = id;
 	this->name = name;
@@ -22,9 +23,10 @@ Account::Account(string id, string name, string address, string phone) {
 	this->phone = phone;
 	this->numRented = 0;
 	this->numReturned = 0;
+	this->type = type;
 }
 
-Account::Account(string id, string name, string address, string phone, int numRented, int numReturned) {
+Account::Account(string id, string name, string address, string phone, int numRented, int numReturned, string type) {
 	// Constructor for possibly existing account
 	this->id = id;
 	this->name = name;
@@ -32,6 +34,7 @@ Account::Account(string id, string name, string address, string phone, int numRe
 	this->phone = phone;
 	this->numRented = numRented;
 	this->numReturned = numReturned;
+	this->type = type;
 }
 
 Account::~Account() {
@@ -61,6 +64,14 @@ int Account::getNumReturned() {
 	return this->numReturned;
 }
 
+string Account::getType() {
+	return this->type;
+}
+
+ItemLinkedList Account::getList() {
+	return this->rentList;
+}
+
 void Account::setId(string id) {
 	this->id = id;
 }
@@ -85,11 +96,19 @@ void Account::setNumReturned(int numReturned) {
 	this->numReturned = numReturned;
 }
 
-// LinkedList methods
-Account* Account::getNext() {
-	return this->next;
+void Account::setType(string type) {
+	this->type = type;
 }
 
-void Account::setNext(Account* next) {
-	this->next = next;
+void Account::setList(ItemLinkedList list) {
+	this->rentList = list;
+}
+
+bool Account::addItem(Item* item) {
+	rentList.add(item);
+	return true;
+}
+
+void Account::printItems() {
+	rentList.displayAll();
 }

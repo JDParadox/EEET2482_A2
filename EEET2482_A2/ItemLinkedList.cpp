@@ -1,43 +1,53 @@
 #include "ItemLinkedList.h"
 
-Node::Node() {
-
+ItemNode::ItemNode() {
+	this->data = NULL;
+	this->next = NULL;
 }
 
-Node::Node(Item* item) {
+ItemNode::ItemNode(Item* item) {
 	this->data = item;
+	this->next = NULL;
 }
 
-Node* Node::getNext() {
+ItemNode* ItemNode::getNext() {
 	return next;
 }
 
-Item* Node::getData() {
+Item* ItemNode::getData() {
 	return data;
 }
 
-void Node::setNext(Node* next) {
+void ItemNode::setNext(ItemNode* next) {
 	this->next = next;
 }
 
-void Node::setData(Item* item) {
+void ItemNode::setData(Item* item) {
 	this->data = item;
 }
 
 ItemLinkedList::ItemLinkedList() {
 	this->head = NULL;
+	this->longestTitle = 0;
 }
 
 ItemLinkedList::ItemLinkedList(Item* item) {
-	Node* newNode = new Node(item);
+	ItemNode* newNode = new ItemNode(item);
 	this->head = newNode;
+	if (item->getTitle().length() > 0) {
+		this->longestTitle = item->getTitle().length();
+	}
+	else {
+		this->longestTitle = 0;
+	}
+	
 }
 
 ItemLinkedList::~ItemLinkedList() {
-	Node* currentPtr = head;
+	ItemNode* currentPtr = head;
 	if (currentPtr != NULL) {
 		while (currentPtr != NULL) {
-			Node* oldPtr = currentPtr;
+			ItemNode* oldPtr = currentPtr;
 			currentPtr = currentPtr->getNext();
 
 			delete oldPtr;
@@ -48,7 +58,7 @@ ItemLinkedList::~ItemLinkedList() {
 
 ostream& operator<<(ostream& os, ItemLinkedList& list)
 {
-	Node* currentPtr = list.head;
+	ItemNode* currentPtr = list.head;
 	if (currentPtr == NULL) cout << "List is empty" << endl;
 	else {
 		while (currentPtr != NULL) {
@@ -60,22 +70,26 @@ ostream& operator<<(ostream& os, ItemLinkedList& list)
 }
 
 void ItemLinkedList::add(Item* item) {
-	Node* currentPtr = head;
-	Node* newNode = new Node(item);
-	if (currentPtr == NULL) {
+	ItemNode* currentPtr = head;
+	ItemNode* newNode = new ItemNode(item);
+	if (item->getTitle().length() > this->longestTitle) {
+		this->longestTitle = item->getTitle().length();
+	}
+	if (currentPtr == NULL || currentPtr->getData()->getId().compare(newNode->getData()->getId()) > 0) {
+		newNode->setNext(head);
 		head = newNode;
 	}
 	else {
-		while (currentPtr->getNext() != NULL) {
+		while (currentPtr->getNext() != NULL && currentPtr->getData()->getId().compare(newNode->getData()->getId()) < 0) {
 			currentPtr = currentPtr->getNext();
 		}
+		newNode->setNext(currentPtr->getNext());
 		currentPtr->setNext(newNode);
-		currentPtr->getNext()->setNext(NULL);
 	}
 }
 
 void ItemLinkedList::displayAll() {
-	Node* currentPtr = head;
+	ItemNode* currentPtr = head;
 	if (currentPtr == NULL) cout << "List is empty" << endl; 
 	else {
 		while (currentPtr != NULL) {
@@ -85,9 +99,101 @@ void ItemLinkedList::displayAll() {
 	}
 }
 
+void ItemLinkedList::displayAllFormatted() {
+	ItemNode* currentPtr = head;
+	if (currentPtr == NULL) cout << "List is empty" << endl;
+	else {
+		cout.width(9);
+		cout << "ID";
+		cout << " | ";
+		cout.width(longestTitle);
+		cout << " Title";
+		cout << " | ";
+		cout.width(6);
+		cout << "Type";
+		cout << " | ";
+		cout.width(6);
+		cout << "Loan";
+		cout << " | ";
+		cout.width(6);
+		cout << "Stock";
+		cout << " | ";
+		cout.width(7);
+		cout << "Fee";
+		cout << " | ";
+		cout.width(6);
+		cout << "Genre";
+		cout << endl;
+		while (currentPtr != NULL) {
+			cout << currentPtr->getData()->getId() << " | ";
+			cout.width(longestTitle);
+			cout << currentPtr->getData()->getTitle() << " | ";
+			cout.width(6);
+			cout << currentPtr->getData()->getRentType() << " | ";
+			cout.width(6);
+			cout << currentPtr->getData()->getLoanType() << " | ";
+			cout.width(6);
+			cout << currentPtr->getData()->getStock() << " | "; 
+			cout.width(6);
+			cout << currentPtr->getData()->getRentFee() << "$ | ";
+			cout.width(6);
+			cout << currentPtr->getData()->getGenre() << endl;
+			currentPtr = currentPtr->getNext();
+		}
+	}
+}
+void ItemLinkedList::displayOutOfStockFormatted() {
+	ItemNode* currentPtr = head;
+	if (currentPtr == NULL) cout << "List is empty" << endl;
+	else {
+		cout.width(9);
+		cout << "ID";
+		cout << " | ";
+		cout.width(longestTitle);
+		cout << " Title";
+		cout << " | ";
+		cout.width(6);
+		cout << "Type";
+		cout << " | ";
+		cout.width(6);
+		cout << "Loan";
+		cout << " | ";
+		cout.width(6);
+		cout << "Stock";
+		cout << " | ";
+		cout.width(7);
+		cout << "Fee";
+		cout << " | ";
+		cout.width(6);
+		cout << "Genre";
+		cout << endl;
+		bool noItems = true;
+		while (currentPtr != NULL) {
+			if (currentPtr->getData()->getStock() == 0) {
+				noItems = false;
+				cout << currentPtr->getData()->getId() << " | ";
+				cout.width(longestTitle);
+				cout << currentPtr->getData()->getTitle() << " | ";
+				cout.width(6);
+				cout << currentPtr->getData()->getRentType() << " | ";
+				cout.width(6);
+				cout << currentPtr->getData()->getLoanType() << " | ";
+				cout.width(6);
+				cout << currentPtr->getData()->getStock() << " | ";
+				cout.width(6);
+				cout << currentPtr->getData()->getRentFee() << "$ | ";
+				cout.width(6);
+				cout << currentPtr->getData()->getGenre() << endl;
+			}
+			currentPtr = currentPtr->getNext();
+		}
+		if (noItems) cout << "There are currently no items out of stock" << endl;
+	}
+}
+
 Item* ItemLinkedList::findById(string id) {
 	int index = 0;
-	Node* currentPtr = head;
+	ItemNode* currentPtr = head;
 	/*if (currentPtr == NULL) cout << "List is empty" << endl;
 	else {
 		while (currentPtr != NULL) {
