@@ -163,12 +163,3 @@ bool Item::returning() {
 	this->stock++;
 	return true;
 }
-
-// LinkedList methods
-Item* Item::getNext() {
-	return this->next;
-}
-
-void Item::setNext(Item* next) {
-	this->next = next;
-}

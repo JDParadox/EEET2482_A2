@@ -43,10 +43,6 @@ public:
 	bool renting();
 	bool returning();
 
-	// LinkedList Node
-	Item* getNext();
-	void setNext(Item* next);
-
 private:
 	string id;
 	string title;
@@ -56,7 +52,4 @@ private:
 	double rentFee;
 	string rentStatus;
 	string genre;
-
-	// LinkedList attrs
-	Item* next;
 };

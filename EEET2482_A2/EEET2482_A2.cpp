@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	itemList.displayAll();
+	//itemList.displayAll();
 
 	// Loads the customers into a dynamic array or linked list?
 	AccountLinkedList accountList;
@@ -220,16 +220,6 @@ int main(int argc, char* argv[])
 	}
 
 	//accountList.displayAll();
-
-	//Account* ptr = accountList.findById("C001");
-
-	/*Item* ptr = itemList.findById("I001-2001");
-	if (ptr != NULL) {
-		cout << "yes";
-	}
-	else {
-		cout << "failed to find " << s2 << endl;
-	}*/
 
 	//string s1;
 	//while (getline(itemFileStr, s1)) {

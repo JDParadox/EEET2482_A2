@@ -4,9 +4,24 @@
 
 #include "Item.h"
 
+class Node {
+	Item* data;
+	Node* next;
+
+public:
+	Node();
+	Node(Item* item);
+
+	Node* getNext();
+	Item* getData();
+
+	void setNext(Node* next);
+	void setData(Item* item);
+};
+
 class ItemLinkedList
 {
-	Item* head;
+	Node* head;
 
 public:
 	ItemLinkedList();
