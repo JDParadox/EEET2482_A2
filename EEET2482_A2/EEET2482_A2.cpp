@@ -133,14 +133,41 @@ bool validateItemId(string id) {
 			}
 		}
 
-		if (letters) cout << "Item IDs must only contain number beyond 'I'" << endl;
+		if (letters) cout << "Item IDs must only contains number beyond 'I'" << endl;
 	}
 
 	return valid;
 }
 
 bool validateAccId(string id) {
-	return true;
+	bool valid = true;
+	bool letters = false;
+
+	if (id.size() > 4) {
+		cout << "Account IDs must follow the CXXX format (too long)" << endl;
+		valid = false;
+	}
+	else if (id.size() < 4) {
+		cout << "Account IDs must follow the CXXX format (too short)" << endl;
+		valid = false;
+	}
+	else {
+		if (id[0] != 'C') {
+			cout << "Account IDs must begin with C" << endl;
+			valid = false;
+		}
+
+		for (int i = 1; i < 4; i++) {
+			if (!(id[i] >= '0' && id[i] <= '9')) {
+				valid = false;
+				letters = true;
+			}
+		}
+
+		if (letters) cout << "Account IDs must only contains number beyond 'C'" << endl;
+	}
+
+	return valid;
 }
 
 bool isInt(string s) {
