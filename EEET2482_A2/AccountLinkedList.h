@@ -40,9 +40,7 @@ public:
 	void remove(Account* account); // Deletes the account from memory too;
 	void displayAll();
 	void displayAllFormatted();
-	void displayAllGuestFormatted();
-	void displayAllRegFormatted();
-	void displayAllVIPFormatted();
+	void displayAllByTypeFormatted(string type);
 	Account* findById(string id);
 	Account* findByName(string name);
 };

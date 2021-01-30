@@ -70,17 +70,18 @@ ostream& operator<<(ostream& os, ItemLinkedList& list)
 }
 
 void ItemLinkedList::add(Item* item) {
-	ItemNode* currentPtr = head;
 	ItemNode* newNode = new ItemNode(item);
 	if (item->getTitle().length() > this->longestTitle) {
 		this->longestTitle = item->getTitle().length();
 	}
-	if (currentPtr == NULL || currentPtr->getData()->getId().compare(newNode->getData()->getId()) > 0) {
+	if (head == NULL || head->getData()->getId().compare(newNode->getData()->getId()) >= 0) {
 		newNode->setNext(head);
 		head = newNode;
+		return;
 	}
 	else {
-		while (currentPtr->getNext() != NULL && currentPtr->getData()->getId().compare(newNode->getData()->getId()) < 0) {
+		ItemNode* currentPtr = head;
+		while (currentPtr->getNext() != NULL && currentPtr->getNext()->getData()->getId().compare(newNode->getData()->getId()) < 0) {
 			currentPtr = currentPtr->getNext();
 		}
 		newNode->setNext(currentPtr->getNext());
@@ -125,6 +126,7 @@ void ItemLinkedList::displayAllFormatted() {
 		cout << "Genre";
 		cout << endl;
 		while (currentPtr != NULL) {
+			cout.width(9);
 			cout << currentPtr->getData()->getId() << " | ";
 			cout.width(longestTitle);
 			cout << currentPtr->getData()->getTitle() << " | ";
@@ -171,6 +173,7 @@ void ItemLinkedList::displayOutOfStockFormatted() {
 		while (currentPtr != NULL) {
 			if (currentPtr->getData()->getStock() == 0) {
 				noItems = false;
+				cout.width(9);
 				cout << currentPtr->getData()->getId() << " | ";
 				cout.width(longestTitle);
 				cout << currentPtr->getData()->getTitle() << " | ";

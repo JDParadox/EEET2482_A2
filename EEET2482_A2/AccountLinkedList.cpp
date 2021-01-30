@@ -86,7 +86,6 @@ ostream& operator<<(ostream& os, AccountLinkedList& list)
 }
 
 void AccountLinkedList::add(Account* account) {
-	AccountNode* currentPtr = head;
 	AccountNode* newNode = new AccountNode(account);
 	if (account->getName().length() > longestName) {
 		this->longestName = account->getName().length();
@@ -98,13 +97,14 @@ void AccountLinkedList::add(Account* account) {
 		this->longestPhone = account->getPhone().length();
 	}
 
-	if (currentPtr == NULL || currentPtr->getData()->getId().compare(newNode->getData()->getId()) > 0) {
+	if (head == NULL || head->getData()->getId().compare(newNode->getData()->getId()) > 0) {
 		newNode->setNext(head);
 		head = newNode;
 	}
 
 	else {
-		while (currentPtr->getNext() != NULL && currentPtr->getData()->getId().compare(newNode->getData()->getId()) < 0 ) {
+		AccountNode* currentPtr = head;
+		while (currentPtr->getNext() != NULL && currentPtr->getNext()->getData()->getId().compare(newNode->getData()->getId()) < 0 ) {
 			currentPtr = currentPtr->getNext();
 		}
 		newNode->setNext(currentPtr->getNext());
@@ -181,7 +181,7 @@ void AccountLinkedList::displayAllFormatted() {
 	}
 }
 
-void AccountLinkedList::displayAllGuestFormatted() {
+void AccountLinkedList::displayAllByTypeFormatted(string type) {
 	AccountNode* currentPtr = head;
 	if (currentPtr == NULL) cout << "List is empty" << endl;
 	else {
@@ -202,8 +202,9 @@ void AccountLinkedList::displayAllGuestFormatted() {
 		cout << endl;
 		bool empty = true;
 		while (currentPtr != NULL) {
-			if (currentPtr->getData()->getType() == "guest") {
+			if (currentPtr->getData()->getType() == type) {
 				empty = false;
+				cout.width(4);
 				cout << currentPtr->getData()->getId() << " | ";
 				cout.width(longestName);
 				cout << currentPtr->getData()->getName() << " | ";
@@ -216,85 +217,7 @@ void AccountLinkedList::displayAllGuestFormatted() {
 			}
 			currentPtr = currentPtr->getNext();
 		}
-		if (empty) cout << "No guest accounts found" << endl;
-	}
-}
-
-void AccountLinkedList::displayAllVIPFormatted() {
-	AccountNode* currentPtr = head;
-	if (currentPtr == NULL) cout << "List is empty" << endl;
-	else {
-		cout.width(4);
-		cout << "ID";
-		cout << " | ";
-		cout.width(longestName);
-		cout << " Name";
-		cout << " | ";
-		cout.width(longestAddress);
-		cout << "Address";
-		cout << " | ";
-		cout.width(longestPhone);
-		cout << "Phone";
-		cout << " | ";
-		cout.width(7);
-		cout << "Rentals";
-		cout << endl;
-		bool empty = true;
-		while (currentPtr != NULL) {
-			if (currentPtr->getData()->getType() == "VIP") {
-				empty = false;
-				cout << currentPtr->getData()->getId() << " | ";
-				cout.width(longestName);
-				cout << currentPtr->getData()->getName() << " | ";
-				cout.width(longestAddress);
-				cout << currentPtr->getData()->getAddress() << " | ";
-				cout.width(longestPhone);
-				cout << currentPtr->getData()->getPhone() << " | ";
-				cout.width(7);
-				cout << currentPtr->getData()->getNumReturned() << endl;
-			}
-			currentPtr = currentPtr->getNext();
-		}
-		if (empty) cout << "No VIP accounts found" << endl;
-	}
-}
-
-void AccountLinkedList::displayAllRegFormatted() {
-	AccountNode* currentPtr = head;
-	if (currentPtr == NULL) cout << "List is empty" << endl;
-	else {
-		cout.width(4);
-		cout << "ID";
-		cout << " | ";
-		cout.width(longestName);
-		cout << " Name";
-		cout << " | ";
-		cout.width(longestAddress);
-		cout << "Address";
-		cout << " | ";
-		cout.width(longestPhone);
-		cout << "Phone";
-		cout << " | ";
-		cout.width(7);
-		cout << "Rentals";
-		cout << endl;
-		bool empty = true;
-		while (currentPtr != NULL) {
-			if (currentPtr->getData()->getType() == "regular") {
-				empty = false;
-				cout << currentPtr->getData()->getId() << " | ";
-				cout.width(longestName);
-				cout << currentPtr->getData()->getName() << " | ";
-				cout.width(longestAddress);
-				cout << currentPtr->getData()->getAddress() << " | ";
-				cout.width(longestPhone);
-				cout << currentPtr->getData()->getPhone() << " | ";
-				cout.width(7);
-				cout << currentPtr->getData()->getNumReturned() << endl;
-			}
-			currentPtr = currentPtr->getNext();
-		}
-		if (empty) cout << "No regular accounts found" << endl;
+		if (empty) cout << "No " << type << " accounts found" << endl;
 	}
 }
 

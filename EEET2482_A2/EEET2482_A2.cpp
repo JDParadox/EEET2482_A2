@@ -96,9 +96,105 @@ void printMainMenu() {
 	cout << "Type 'Exit' to quit the program." << endl;
 }
 
-void itemCRUD() {
+bool validateItemId(string id) {
+	bool valid = true;
+	bool letters = false;
+
+	if (id.size() > 9) {
+		cout << "Item IDs must follow the IXXX-YEAR format (too long)" << endl;
+		valid = false;
+	}
+	else if (id.size() < 9) {
+		cout << "Item IDs must follow the IXXX-YEAR format (too short)" << endl;
+		valid = false;
+	}
+	else {
+		if (id[0] != 'I') {
+			cout << "Item IDs must begin with I" << endl;
+			valid = false;
+		}
+
+		if (id[4] != '-') {
+			cout << "Item IDs must have a -" << endl;
+			valid = false;
+		}
+
+		for (int i = 1; i < 4; i++) {
+			if (!(id[i] >= '0' && id[i] <= '9')) {
+				valid = false;
+				letters = true;
+			}
+		}
+
+		for (int i = 5; i < 9; i++) {
+			if (!(id[i] >= '0' && id[i] <= '9')) {
+				valid = false;
+				letters = true;
+			}
+		}
+
+		if (letters) cout << "Item IDs must only contain number beyond 'I'" << endl;
+	}
+
+	return valid;
+}
+
+bool isInt(string s) {
+	bool valid = true;
+
+	for (size_t i = 0; i < s.size(); i++) {
+		if (!(s[i] >= '0' && s[i] <= '9')) {
+			valid = false;
+		}
+	}
+
+	if (valid) return true;
+	else {
+		cout << s << " is not a valid number" << endl;
+		return false;
+	}
+}
+
+bool isDouble(string s) {
+	bool valid = true;
+	int decCount = 0;
+
+	for (size_t i = 0; i < s.size(); i++) {
+		if (!(s[i] >= '0' && s[i] <= '9') &&  s[i] != '.') {
+			valid = false;
+		}
+		else if (s[i] == '.') {
+			decCount++;
+		}
+	}
+
+	if (valid && decCount <= 1) return true;
+	else {
+		cout << s << " is not a valid number" << endl;
+		return false;
+	}
+}
+
+void itemCRUD(ItemLinkedList * list) {
+	bool cancel;
+	string userInput;
+	string newId = "N/A";
+	string newTitle = "N/A";
+	string newRentType = "N/A";
+	string newLoanType = "N/A";
+	int newStock = 0;
+	double newRentFee = 0;
+	string newGenre = "N/A";
 	while (true) {
-		string userInput;
+		cancel = false;
+		newId = "N/A";
+		newTitle = "N/A";
+		newRentType = "N/A";
+		newLoanType = "N/A";
+		newStock = 0;
+		newRentFee = 0;
+		newGenre = "N/A";
+
 		cout << "Enter an option below" << endl;
 		cout << "1.Add a new item" << endl;
 		cout << "2.Update an existing item" << endl;
@@ -110,9 +206,151 @@ void itemCRUD() {
 		if (userInput == "exit" || userInput == "Exit") {
 			break;
 		}
+
 		else if (userInput == "1") {
 			// Add item
-			cout << "Adding a new item. Type 'cancel' at anytime to stop" << endl;
+			cout << "Current items" << endl;
+			list->displayAllFormatted();
+			printDivider();
+
+			cout << "Adding a new item. Type 'Exit' at anytime to stop" << endl;
+			cout << "Please input the item's ID in the format of IXXX-YEAR:" << endl;
+			
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else if (validateItemId(userInput)) {
+					if (list->findById(userInput) == NULL) {
+						newId = userInput;
+						break;
+					}
+					else {
+						cout << "Item ID already exists" << endl;
+					}
+				}
+				
+			}
+
+			if (!cancel) cout << "Please input the item's title:" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin.ignore();
+				getline(cin, userInput);
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					newTitle = userInput;
+					break;
+				}
+			}
+
+			if (!cancel) {
+				cout << "Please select the item's type:" << endl;
+				cout << "1.Game" << endl;
+				cout << "2.Record" << endl;
+				cout << "2.DVD" << endl;
+			}
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else if (userInput == "1") {
+					newRentType = "Game";
+					break;
+				}
+				else if (userInput == "2") {
+					newRentType = "Record";
+					break;
+				}
+				else if (userInput == "3") {
+					newRentType = "DVD";
+					break;
+				}
+				else {
+					cout << "Invalid option. Please try again" << endl;
+				}
+			}
+
+			if (!cancel) {
+				cout << "Please select the item's loan type:" << endl;
+				cout << "1.2-day" << endl;
+				cout << "2.1-week" << endl;
+			}
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else if (userInput == "1") {
+					newLoanType = "2-day";
+					break;
+				}
+				else if (userInput == "2") {
+					newLoanType = "1-week";
+					break;
+				}
+				else {
+					cout << "Invalid option. Please try again" << endl;
+				}
+			}
+
+			if (!cancel) cout << "Please input the item's current stock:" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else if (isInt(userInput)) {
+					newStock = stoi(userInput);
+					break;
+				}
+			}
+
+			if (!cancel) cout << "Please input the item's rental fee:" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else if (isDouble(userInput)) {
+					newRentFee = stod(userInput);
+					break;
+				}
+			}
+
+			if (!cancel && (newRentType != "Game")) cout << "Please input the item's genre:" << endl;
+			while (true && !cancel && (newRentType != "Game")) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					newGenre = userInput;
+					break;
+				}
+			}
+
+			if (!cancel) {
+				Item* newItem = new Item(newId, newTitle, newRentType, newLoanType, newStock, newRentFee, newGenre);
+				list->add(newItem);
+				cout << "The following item was added" << endl;
+				cout << *newItem << endl;
+				printDivider();
+			}
+			else {
+				cout << "Add item canceled. Returning" << endl;
+				printDivider();
+			}
 		}
 		else if (userInput == "2") {
 			// Return item
@@ -129,9 +367,21 @@ void itemCRUD() {
 	}
 }
 
-void userCRUD() {
+void userCRUD(AccountLinkedList * list) {
+	string userInput;
+	bool cancel;
+	string newType = "N/A";
+	string newId = "N/A";
+	string newName = "N/A";
+	string newAddress = "N/A";
+	string newPhone = "N/A";
 	while (true) {
-		string userInput;
+		cancel = false;
+		newId = "N/A";
+		newName = "N/A";
+		newAddress = "N/A";
+		newPhone = "N/A";
+
 		cout << "Enter an option below" << endl;
 		cout << "1.Add a new acount" << endl;
 		cout << "2.Update an existing account" << endl;
@@ -143,8 +393,78 @@ void userCRUD() {
 			break;
 		}
 		else if (userInput == "1") {
-			// Rent item
-			cout << 4;
+			// Add account
+			cout << "Adding a new account. Type 'Exit' at anytime to stop" << endl;
+
+			if (!cancel) {
+				cout << "Please select the account type:" << endl;
+				cout << "1.Guest" << endl;
+				cout << "2.Regular" << endl;
+				cout << "2.VIP" << endl;
+			}
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else if (userInput == "1") {
+					newType = "guest";
+					break;
+				}
+				else if (userInput == "2") {
+					newType = "regular";
+					break;
+				}
+				else if (userInput == "3") {
+					newType = "VIP";
+					break;
+				}
+				else {
+					cout << "Invalid option. Please try again" << endl;
+				}
+			}
+
+			if (!cancel) cout << "Please input the account ID in the format of CXXX:" << endl;
+
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else if (validateItemId(userInput)) {
+					newId = userInput;
+					break;
+				}
+
+			}
+
+			if (!cancel) cout << "Please input the item's title:" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin.ignore();
+				getline(cin, userInput);
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					newName = userInput;
+					break;
+				}
+			}
+
+			if (!cancel) {
+				/*Item* newItem = new Item(newId, newTitle, newRentType, newLoanType, newStock, newRentFee, newGenre);
+				list->add(newItem);
+				cout << "The following item was added" << endl;
+				cout << *newItem << endl;*/
+				printDivider();
+			}
+			else {
+				cout << "Add item canceled. Returning" << endl;
+				printDivider();
+			}
 		}
 		else if (userInput == "2") {
 			// Return item
@@ -199,7 +519,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	//itemList.displayAll();
+	//itemList.displayAll()
 
 	// Loads the customers into a dynamic array or linked list?
 	AccountLinkedList accountList;
@@ -282,7 +602,6 @@ int main(int argc, char* argv[])
 	}
 
 	//accountList.displayAll();
-	accountList.displayAll();
 
 	printDivider();
 
@@ -298,11 +617,11 @@ int main(int argc, char* argv[])
 		}
 		else if (userInput == "1") {
 			// Items CRUD
-			itemCRUD();
+			itemCRUD(&itemList);
 		}
 		else if (userInput == "2") {
 			// Account CRUD
-			userCRUD();
+			userCRUD(&accountList);
 		}
 		else if (userInput == "3") {
 			// Promote customer
@@ -395,19 +714,19 @@ int main(int argc, char* argv[])
 				else if (userInput == "1") {
 					// Display guests customers
 					cout << "All customers:" << endl;
-					accountList.displayAllGuestFormatted();
+					accountList.displayAllByTypeFormatted("guest");
 					printDivider();
 				}
 				else if (userInput == "2") {
 					// Display display regular customers
 					cout << "All customers:" << endl;
-					accountList.displayAllRegFormatted();
+					accountList.displayAllByTypeFormatted("regular");
 					printDivider();
 				}
 				else if (userInput == "3") {
 					// Display VIP customers
 					cout << "All customers:" << endl;
-					accountList.displayAllVIPFormatted();
+					accountList.displayAllByTypeFormatted("VIP");
 					printDivider();
 				}
 				else {
