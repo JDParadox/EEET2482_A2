@@ -406,6 +406,7 @@ void userCRUD(AccountLinkedList * list) {
 	string newName = "N/A";
 	string newAddress = "N/A";
 	string newPhone = "N/A";
+	int newReturned = 0;
 	while (true) {
 		cancel = false;
 		newId = "N/A";
@@ -554,6 +555,91 @@ void userCRUD(AccountLinkedList * list) {
 			cout << "Current accounts" << endl;
 			list->displayAllFormatted();
 			printDivider();
+
+			cout << "Please input the ID of the account you would like to edit. Type 'Exit' to cancel at anytime" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					Account* acc = list->findById(userInput);
+					if (acc != NULL) {
+						printDivider();
+						cout << "Editing account with ID " << acc->getId() << endl;
+						cout << acc->getId() << " | " << acc->getName() << " | " << acc->getAddress() << " | " << acc->getPhone() << " | " << acc->getNumReturned() << endl;
+						
+						if (!cancel) cout << "Please input the customer's new name:" << endl;
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin.ignore();
+							getline(cin, userInput);
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else {
+								newName = userInput;
+								break;
+							}
+						}
+
+						if (!cancel) cout << "Please input the customer's new address:" << endl;
+						while (true && !cancel) {
+							cout << "Input: ";
+							//cin.ignore();
+							getline(cin, userInput);
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else {
+								newAddress = userInput;
+								break;
+							}
+						}
+
+						if (!cancel) cout << "Please input the customer's new phone:" << endl;
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else {
+								newPhone = userInput;
+								break;
+							}
+						}
+
+						if (!cancel) cout << "Please input the customer's new successful rentals:" << endl;
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else if (isInt(userInput)) {
+								newReturned = stoi(userInput);
+								break;
+							}
+						}
+
+						if (!cancel) {
+							acc->setName(newName);
+							acc->setAddress(newAddress);
+							acc->setPhone(newPhone);
+							acc->setNumReturned(newReturned);
+							cout << "The following account was successfully edited" << endl;
+							cout << acc->getId() << " | " << acc->getName() << " | " << acc->getAddress() << " | " << acc->getPhone() << " | " << acc->getNumReturned() << endl;
+							printDivider();
+							break;
+						}
+					}
+					else {
+						cout << "Account not found. Please try again." << endl;
+					}
+				}
+			}
 		}
 		else {
 			cout << "Invalid option. Please try again" << endl;
@@ -590,8 +676,6 @@ int main(int argc, char* argv[])
 		cout << cusFileName << " successfully loaded" << endl;
 	}
 
-	// Parse and loads the items into a dynamic array or linked list?
-	//Item* itemList = new Item[1];
 	ItemLinkedList itemList;
 
 	string s1;
@@ -603,10 +687,6 @@ int main(int argc, char* argv[])
 			itemList.add(item);
 		}
 	}
-
-	//itemList.displayAll()
-
-	// Loads the customers into a dynamic array or linked list?
 	AccountLinkedList accountList;
 
 	string s2;
