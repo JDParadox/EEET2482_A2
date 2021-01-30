@@ -139,6 +139,10 @@ bool validateItemId(string id) {
 	return valid;
 }
 
+bool validateAccId(string id) {
+	return true;
+}
+
 bool isInt(string s) {
 	bool valid = true;
 
@@ -394,6 +398,11 @@ void userCRUD(AccountLinkedList * list) {
 		}
 		else if (userInput == "1") {
 			// Add account
+
+			cout << "Current accounts" << endl;
+			list->displayAllFormatted();
+			printDivider();
+
 			cout << "Adding a new account. Type 'Exit' at anytime to stop" << endl;
 
 			if (!cancel) {
@@ -433,14 +442,19 @@ void userCRUD(AccountLinkedList * list) {
 				if (userInput == "exit" || userInput == "Exit") {
 					cancel = true;
 				}
-				else if (validateItemId(userInput)) {
-					newId = userInput;
-					break;
+				else if (validateAccId(userInput)) {
+					if (list->findById(userInput) == NULL) {
+						newId = userInput;
+						break;
+					}
+					else {
+						cout << "Account ID already exists" << endl;
+					}
 				}
 
 			}
 
-			if (!cancel) cout << "Please input the item's title:" << endl;
+			if (!cancel) cout << "Please input the customer's name:" << endl;
 			while (true && !cancel) {
 				cout << "Input: ";
 				cin.ignore();
@@ -454,12 +468,54 @@ void userCRUD(AccountLinkedList * list) {
 				}
 			}
 
+			if (!cancel) cout << "Please input the customer's address:" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				//cin.ignore();
+				getline(cin, userInput);
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					newAddress = userInput;
+					break;
+				}
+			}
+
+			if (!cancel) cout << "Please input the customer's phone:" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					newPhone = userInput;
+					break;
+				}
+			}
+
 			if (!cancel) {
-				/*Item* newItem = new Item(newId, newTitle, newRentType, newLoanType, newStock, newRentFee, newGenre);
-				list->add(newItem);
-				cout << "The following item was added" << endl;
-				cout << *newItem << endl;*/
+				Account* newAcc = new Guest();
+				if (newType == "VIP"){
+					delete newAcc;
+					newAcc = new VIP(newId, newName, newAddress, newPhone);
+					
+				}
+				else if (newType == "regular") {
+					delete newAcc;
+					newAcc = new Regular(newId, newName, newAddress, newPhone);
+				}
+				else {
+					delete newAcc;
+					newAcc = new Guest(newId, newName, newAddress, newPhone);
+				}
+				list->add(newAcc);
+				cout << "The following account was added" << endl;
+				cout << newAcc->getId() << " | " << newAcc->getName() << " | " << newAcc->getAddress() << " | " << newAcc->getPhone() << endl;
 				printDivider();
+				
+				
 			}
 			else {
 				cout << "Add item canceled. Returning" << endl;
@@ -467,8 +523,10 @@ void userCRUD(AccountLinkedList * list) {
 			}
 		}
 		else if (userInput == "2") {
-			// Return item
-			cout << 5;
+			// Edit account
+			cout << "Current accounts" << endl;
+			list->displayAllFormatted();
+			printDivider();
 		}
 		else {
 			cout << "Invalid option. Please try again" << endl;
