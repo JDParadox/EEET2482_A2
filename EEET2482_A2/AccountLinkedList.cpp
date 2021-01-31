@@ -86,9 +86,13 @@ ostream& operator<<(ostream& os, AccountLinkedList& list)
 }
 
 void AccountLinkedList::add(Account* account) {
-	AccountNode* newNode = new AccountNode(account);
+	// Adds account to linked list
+
+	AccountNode* newNode = new AccountNode(account); // Creates new node with account
+
+	// Sets new longest attributes
 	if (account->getName().length() > longestName) {
-		this->longestName = account->getName().length();
+		this->longestName = account->getName().length(); 
 	}
 	if (account->getAddress().length() > longestAddress) {
 		this->longestAddress = account->getAddress().length();
@@ -97,6 +101,7 @@ void AccountLinkedList::add(Account* account) {
 		this->longestPhone = account->getPhone().length();
 	}
 
+	// If list is empty, or if head node's id is smaller than newNode's, set head to newNode
 	if (head == NULL || head->getData()->getId().compare(newNode->getData()->getId()) > 0) {
 		newNode->setNext(head);
 		head = newNode;
@@ -104,39 +109,48 @@ void AccountLinkedList::add(Account* account) {
 
 	else {
 		AccountNode* currentPtr = head;
+		
+		// Iterate until next node's id is larger than newNode
 		while (currentPtr->getNext() != NULL && currentPtr->getNext()->getData()->getId().compare(newNode->getData()->getId()) < 0 ) {
 			currentPtr = currentPtr->getNext();
 		}
-		newNode->setNext(currentPtr->getNext());
-		currentPtr->setNext(newNode);
+
+		// Inserting newNode inbetween current and next node
+		newNode->setNext(currentPtr->getNext()); // Set newNode's next to the next node
+		currentPtr->setNext(newNode); // Set the current node's next to the new node
 	}
 }
 
 void AccountLinkedList::remove(Account* account) {
-	AccountNode* temp = head;
-	AccountNode* prev = NULL;
+	AccountNode* temp = head; // temp node
+	AccountNode* prev = NULL; // prev node
 
+	// If head node is the node to remove, set the head node to the next node, then delete the old head.
 	if (temp != NULL && temp->getData() == account) {
 		head = temp->getNext();
 		delete temp;
 		return;
 	}
 	
+	// Iterate until it finds the target
 	while (temp != NULL && temp->getData() != account) {
 		prev = temp;
 		temp = temp->getNext();
 	}
 
+	// If can't find it stops
 	if (temp == NULL) {
 		return;
 	}
 
+	// If found, delete it
 	prev->setNext(temp->getNext());
 	delete temp;
 
 }
 
 void AccountLinkedList::displayAll() {
+	// Display the whole list
 	AccountNode* currentPtr = head;
 	if (currentPtr == NULL) cout << "List is empty" << endl;
 	else {
@@ -148,10 +162,14 @@ void AccountLinkedList::displayAll() {
 }
 
 void AccountLinkedList::displayAllFormatted() {
+	// Display list with columns
 	AccountNode* currentPtr = head;
 	if (currentPtr == NULL) cout << "List is empty" << endl;
+
 	else {
-		cout.width(4);
+
+		//Prints top column with legends
+		cout.width(4); // resizing
 		cout << "ID";
 		cout << " | ";
 		cout.width(longestName);
@@ -166,6 +184,8 @@ void AccountLinkedList::displayAllFormatted() {
 		cout.width(7);
 		cout << "Rentals";
 		cout << endl;
+
+		//Prints the list
 		while (currentPtr != NULL) {
 			cout << currentPtr->getData()->getId() << " | ";
 			cout.width(longestName);
@@ -182,9 +202,13 @@ void AccountLinkedList::displayAllFormatted() {
 }
 
 void AccountLinkedList::displayAllByTypeFormatted(string type) {
+	// Display list with columns by type
+
 	AccountNode* currentPtr = head;
 	if (currentPtr == NULL) cout << "List is empty" << endl;
 	else {
+
+		//Prints top column with legends
 		cout.width(4);
 		cout << "ID";
 		cout << " | ";
@@ -202,7 +226,9 @@ void AccountLinkedList::displayAllByTypeFormatted(string type) {
 		cout << endl;
 		bool empty = true;
 		while (currentPtr != NULL) {
-			if (currentPtr->getData()->getType() == type) {
+
+			//Prints the list
+			if (currentPtr->getData()->getType() == type) { // Only print if it's the right type
 				empty = false;
 				cout.width(4);
 				cout << currentPtr->getData()->getId() << " | ";
@@ -222,6 +248,7 @@ void AccountLinkedList::displayAllByTypeFormatted(string type) {
 }
 
 Account* AccountLinkedList::findById(string id) {
+	// Find account by ID
 	AccountNode* currentPtr = head;
 
 	while (currentPtr != NULL) {
@@ -235,6 +262,7 @@ Account* AccountLinkedList::findById(string id) {
 }
 
 Account* AccountLinkedList::findByName(string name) {
+	// Find account by name
 	AccountNode* currentPtr = head;
 
 	while (currentPtr != NULL) {
@@ -248,12 +276,25 @@ Account* AccountLinkedList::findByName(string name) {
 }
 
 void AccountLinkedList::writeToStream(ofstream& fileStr) {
+	// Writes to a fileStream
 	AccountNode* currentPtr = head;
 	AccountNode* temp;
 	while (currentPtr != NULL) {
 		if (currentPtr->getData() != NULL) {
-			fileStr << currentPtr->getData()->getId() << "," << currentPtr->getData()->getName() << "," << currentPtr->getData()->getAddress() << "," << currentPtr->getData()->getPhone() << "," << currentPtr->getData()->getNumReturned() << "," << currentPtr->getData()->getType() << endl;
-			currentPtr->getData()->getList()->writeIdToStream(fileStr);
+			fileStr << currentPtr->getData()->getId() << "," << currentPtr->getData()->getName() << "," << currentPtr->getData()->getAddress() << "," << currentPtr->getData()->getPhone() << "," << currentPtr->getData()->getNumReturned() << ",";
+			// Write customer data with comma delim
+
+			// Writes account type. This is very inefficient, but accidentally made account type lowercase so, oops. Either I do this, or I try to fix everything else and cause untold number of bugs
+			if (currentPtr->getData()->getType() == "guest") {
+				fileStr << "Guest" << endl;
+			}
+			else if (currentPtr->getData()->getType() == "regular") {
+				fileStr << "Regular" << endl;
+			}
+			else {
+				fileStr << "VIP" << endl;
+			}
+			currentPtr->getData()->getList()->writeIdToStream(fileStr); // Writes the rentList to stream
 			currentPtr = currentPtr->getNext();
 		}
 	}

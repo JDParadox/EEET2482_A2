@@ -5,6 +5,7 @@
 #include "Account.h"
 
 class VIP : public Account
+	// VIP account subclass. Not sure if needed anymore
 {
 public:
 	VIP();

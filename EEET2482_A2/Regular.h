@@ -6,6 +6,7 @@
 #include "Guest.h"
 
 class Regular : public Account
+	// Regular account subclass. Not sure if needed anymore
 {
 public:
 	Regular();

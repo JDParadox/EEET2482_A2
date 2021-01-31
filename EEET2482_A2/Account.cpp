@@ -114,16 +114,18 @@ void Account::printItems() {
 }
 
 bool Account::renting(Item* item) {
+	// Adding item to the rentlist. Error handling is in main cpp
 	rentList.add(item);
-	item->setStock(item->getStock() - 1);
-	this->numRented++;
+	item->setStock(item->getStock() - 1); // Lowers item stock
+	this->numRented++; // Counts number of current items rented. Legacy code since getSize() was implemented for the LinkedList
 	return true;
 }
 
 bool Account::returning(Item* item) {
-	rentList.removeNode(item);
-	item->setStock(item->getStock() + 1);
-	this->numRented--;
-	this->numReturned++;
+	// Removing item from the rentlist. Error handling is in main cpp
+	rentList.removeNode(item); // RemoveNode does not delete the actual item
+	item->setStock(item->getStock() + 1); // Adds back stock
+	this->numRented--; // Counts number of current items rented. Legacy code since getSize() was implemented for the LinkedList
+	this->numReturned++; // Updates the number of successful returns
 	return true;
 }

@@ -70,6 +70,7 @@ ostream& operator<<(ostream& os, ItemLinkedList& list)
 }
 
 int ItemLinkedList::getSize() {
+	// Get list size. Iterates and counts 
 	ItemNode* temp;
 
 	int size = 0;
@@ -84,7 +85,7 @@ int ItemLinkedList::getSize() {
 			size++;
 			currentPtr = currentPtr->getNext();
 		}
-		else {
+		else { // In case node does not have data
 			temp = currentPtr;
 			currentPtr = currentPtr->getNext();
 			removeNode(temp);
@@ -96,16 +97,22 @@ int ItemLinkedList::getSize() {
 }
 
 void ItemLinkedList::add(Item* item) {
+	// Adds item to list in sorted position
+
 	ItemNode* newNode = new ItemNode(item);
 	if (item->getTitle().length() > this->longestTitle) {
-		this->longestTitle = item->getTitle().length();
+		this->longestTitle = item->getTitle().length(); // Checks if title is longer than recorded
 	}
+
+	// If list is empty or head is smaller
 	if (head == NULL || head->getData()->getId().compare(newNode->getData()->getId()) >= 0) {
 		newNode->setNext(head);
 		head = newNode;
 		return;
 	}
+
 	else {
+		// Iterate until found smaller data id and then insert
 		ItemNode* currentPtr = head;
 		while (currentPtr->getNext() != NULL && currentPtr->getNext()->getData()->getId().compare(newNode->getData()->getId()) < 0) {
 			currentPtr = currentPtr->getNext();
@@ -116,8 +123,10 @@ void ItemLinkedList::add(Item* item) {
 }
 
 void ItemLinkedList::remove(Item* item) {
+	//Remove from list and delete item
 	ItemNode* temp;
 
+	// If head is item, remove
 	if (head != NULL && head->getData() == item) {
 		temp = head;
 		head = head->getNext();
@@ -128,6 +137,7 @@ void ItemLinkedList::remove(Item* item) {
 		return;
 	}
 
+	// Iterate until found and delete
 	ItemNode* currentPtr = head;
 	while (currentPtr != NULL) {
 		//cout << id << " " << currentPtr->getData()->getId() << endl;
@@ -145,8 +155,10 @@ void ItemLinkedList::remove(Item* item) {
 }
 
 void ItemLinkedList::removeNode(ItemNode* node) {
+	// Remove from list. Does not delete item
 	ItemNode* temp;
 
+	// If head is item, remove
 	if (head != NULL && head == node) {
 		temp = head;
 		head = head->getNext();
@@ -155,9 +167,9 @@ void ItemLinkedList::removeNode(ItemNode* node) {
 		return;
 	}
 
+	// Iterate until found and remove
 	ItemNode* currentPtr = head;
 	while (currentPtr != NULL) {
-		//cout << id << " " << currentPtr->getData()->getId() << endl;
 		if (currentPtr->getNext() == node) {
 			// Find node before target
 			temp = currentPtr->getNext();
@@ -171,8 +183,10 @@ void ItemLinkedList::removeNode(ItemNode* node) {
 }
 
 void ItemLinkedList::removeNode(Item* item) {
+	// Remove from list. Does not delete item
 	ItemNode* temp;
 
+	// If head is item, remove
 	if (head != NULL && head->getData() == item) {
 		temp = head;
 		head = head->getNext();
@@ -181,6 +195,7 @@ void ItemLinkedList::removeNode(Item* item) {
 		return;
 	}
 
+	// Iterate until found and remove
 	ItemNode* currentPtr = head;
 	while (currentPtr != NULL) {
 		//cout << id << " " << currentPtr->getData()->getId() << endl;
@@ -197,16 +212,18 @@ void ItemLinkedList::removeNode(Item* item) {
 }
 
 void ItemLinkedList::displayAll() {
+	// Debug display
 	ItemNode* currentPtr = head;
 	ItemNode* temp;
 	if (currentPtr == NULL) cout << "List is empty" << endl; 
 	else {
+		// Iterates and print all
 		while (currentPtr != NULL) {
-			if (currentPtr->getData() != NULL) {
+			if (currentPtr->getData() != NULL) { // If data is not NULL
 				cout << currentPtr->getData()->getId() << " | " << currentPtr->getData()->getTitle() << " | " << currentPtr->getData()->getRentType() << " | " << currentPtr->getData()->getLoanType() << " | " << currentPtr->getData()->getStock() << " | " << currentPtr->getData()->getRentFee() << " | " << currentPtr->getData()->getGenre() << endl;
 				currentPtr = currentPtr->getNext();
 			}
-			else {
+			else { // If data is null, remove it
 				temp = currentPtr;
 				currentPtr = currentPtr->getNext();
 				removeNode(temp);
@@ -216,6 +233,7 @@ void ItemLinkedList::displayAll() {
 }
 
 void ItemLinkedList::displayAllFormatted() {
+	// Similar to display all and display formatted from AccountLinkedList
 	ItemNode* currentPtr = head;
 	ItemNode* temp;
 	if (currentPtr == NULL) cout << "List is empty" << endl;
@@ -268,6 +286,7 @@ void ItemLinkedList::displayAllFormatted() {
 	}
 }
 void ItemLinkedList::displayOutOfStockFormatted() {
+	// Similar to display all and display formatted from AccountLinkedList
 	ItemNode* currentPtr = head;
 	ItemNode* temp;
 
@@ -327,6 +346,7 @@ void ItemLinkedList::displayOutOfStockFormatted() {
 }
 
 Item* ItemLinkedList::findById(string id) {
+	// Similar to find by id in AccountlinkedList
 	int index = 0;
 	ItemNode* currentPtr = head;
 
@@ -341,6 +361,7 @@ Item* ItemLinkedList::findById(string id) {
 }
 
 Item* ItemLinkedList::findByTitle(string title) {
+	// Similar to find by name in AccountlinkedList
 	ItemNode* currentPtr = head;
 
 	while (currentPtr != NULL) {
@@ -355,6 +376,7 @@ Item* ItemLinkedList::findByTitle(string title) {
 }
 
 void ItemLinkedList::writeToStream(ofstream &fileStr) {
+	// Write to fileStream
 	ItemNode* currentPtr = head;
 	ItemNode* temp;
 	while (currentPtr != NULL) {
@@ -375,6 +397,7 @@ void ItemLinkedList::writeToStream(ofstream &fileStr) {
 }
 
 void ItemLinkedList::writeIdToStream(ofstream& fileStr) {
+	// Write to fileStream
 	ItemNode* currentPtr = head;
 	ItemNode* temp;
 	while (currentPtr != NULL) {

@@ -8,6 +8,8 @@
 #include "Item.h"
 
 class ItemNode : public Node {
+	// ItemNode subclass. Not sure if necessary
+
 	Item* data;
 	ItemNode* next;
 
@@ -23,9 +25,10 @@ public:
 };
 
 class ItemLinkedList : public LinkedList
+	//ItemLinkedList subclass. Sorted Linked List, to be more precise
 {
 	ItemNode* head;
-	size_t longestTitle;
+	size_t longestTitle; // For formatting
 
 public:
 	ItemLinkedList();
@@ -34,17 +37,17 @@ public:
 
 	friend ostream& operator<<(ostream& os, ItemLinkedList& list);
 
-	int getSize();
-	void add(Item* item);
-	void remove(Item* item);
-	void removeNode(ItemNode* node);
-	void removeNode(Item* item);
-	void displayAll();
-	void displayAllFormatted();
-	void displayOutOfStockFormatted();
-	Item* findById(string id);
-	Item* findByTitle(string title);
+	int getSize(); // get list size
+	void add(Item* item); // Add item to list in sorted position
+	void remove(Item* item); // Removes item from list and delete the item
+	void removeNode(ItemNode* node); // Removes the node from list. Takes node param
+	void removeNode(Item* item); // Removes the node from list. Takes item param
+	void displayAll(); // Debug print
+	void displayAllFormatted(); // Formatted print
+	void displayOutOfStockFormatted(); // Formatted print for out of stock items
+	Item* findById(string id); // Find by id
+	Item* findByTitle(string title); // Find by title
 
-	void writeToStream(ofstream& fileStr);
-	void writeIdToStream(ofstream& fileStr);
+	void writeToStream(ofstream& fileStr); // Write whole item to stream
+	void writeIdToStream(ofstream& fileStr); // Write only id to stream (for Account::writeToStream)
 };

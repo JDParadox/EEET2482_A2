@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// Base classes for LinkedList
+
 class Node {
 	int data;
 	Node* next;

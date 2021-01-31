@@ -10,6 +10,7 @@
 #define MAXRENT 2
 
 class Guest : public Account 
+	// Guest subclass. Not sure actually need it anymore
 {
 public:
 	// Constructors and destructors
@@ -22,8 +23,6 @@ public:
 	// Setters
 
 	// Methods
-	/*bool renting(Item* item);
-	bool returning(Item* item);*/
 
 private:
 };

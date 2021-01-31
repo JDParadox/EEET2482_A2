@@ -10,8 +10,8 @@ class Item
 public:
 	// Constructors and destructors
 	Item();
-	Item(string id, string title, string rentType, string loanType, int stock, double rentFee);
-	Item(string id, string title, string rentType, string loanType, int stock, double rentFee, string genre);
+	Item(string id, string title, string rentType, string loanType, int stock, double rentFee); // Constructor for new games
+	Item(string id, string title, string rentType, string loanType, int stock, double rentFee, string genre); // Constructor for new others
 	Item(const Item& item);
 	~Item();
 
@@ -40,8 +40,8 @@ public:
 	void setAll(string id, string title, string rentType, string loanType, int stock, double rentFee, string genre);
 
 	// Methods
-	bool renting();
-	bool returning();
+	bool renting(); // Never used
+	bool returning(); // Never used
 
 private:
 	string id;

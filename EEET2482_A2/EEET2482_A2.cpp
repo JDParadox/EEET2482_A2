@@ -28,6 +28,10 @@ Item parseItem(string s) {
 
 	size_t found;
 
+	// All it does it find the next comma, parse it as a value, deletes the rest.
+
+	// Probably very bug prone, if the file format is wrong
+
 	found = s.find(',');
 	if (found != string::npos) {
 		tempId = s.substr(0, found);
@@ -70,7 +74,7 @@ Item parseItem(string s) {
 		tempFee = stod(s);
 	}
 
-	return Item(tempId, tempTitle, tempRentType, tempLoanType, tempStock, tempFee, tempGenre);
+	return Item(tempId, tempTitle, tempRentType, tempLoanType, tempStock, tempFee, tempGenre); // Returns the new item
 }
 
 void printDivider() {
@@ -97,80 +101,84 @@ void printMainMenu() {
 }
 
 bool validateItemId(string id) {
-	bool valid = true;
-	bool letters = false;
+	// Validate item id
+	bool valid = true; // if valid
+	bool letters = false; // If there's letters
 
-	if (id.size() > 9) {
+	if (id.size() > 9) { // Can't be longer than 9 char
 		cout << "Item IDs must follow the IXXX-YEAR format (too long)" << endl;
 		valid = false;
 	}
-	else if (id.size() < 9) {
+	else if (id.size() < 9) { // Can't be shorter than 9 char
 		cout << "Item IDs must follow the IXXX-YEAR format (too short)" << endl;
 		valid = false;
 	}
 	else {
-		if (id[0] != 'I') {
+		if (id[0] != 'I') { // Checks if first char is I
 			cout << "Item IDs must begin with I" << endl;
 			valid = false;
 		}
 
-		if (id[4] != '-') {
+		if (id[4] != '-') { // Checks if 5 char is a dash
 			cout << "Item IDs must have a -" << endl;
 			valid = false;
 		}
 
-		for (int i = 1; i < 4; i++) {
+		for (int i = 1; i < 4; i++) { // Checks if first numerical portion is numerical
 			if (!(id[i] >= '0' && id[i] <= '9')) {
 				valid = false;
 				letters = true;
 			}
 		}
 
-		for (int i = 5; i < 9; i++) {
+		for (int i = 5; i < 9; i++) { // Checks if year portion is numerical
 			if (!(id[i] >= '0' && id[i] <= '9')) {
 				valid = false;
 				letters = true;
 			}
 		}
 
-		if (letters) cout << "Item IDs must only contains number beyond 'I'" << endl;
+		if (letters) cout << "Item IDs must only contains number beyond 'I'" << endl; // if there's letters, print this
 	}
 
 	return valid;
 }
 
 bool validateAccId(string id) {
+	// validate account id
 	bool valid = true;
 	bool letters = false;
 
-	if (id.size() > 4) {
+	if (id.size() > 4) { // Can't be longer than 4 char
 		cout << "Account IDs must follow the CXXX format (too long)" << endl;
 		valid = false;
 	}
-	else if (id.size() < 4) {
+	else if (id.size() < 4) { // Can't be shorter than 9 char
 		cout << "Account IDs must follow the CXXX format (too short)" << endl;
 		valid = false;
 	}
 	else {
-		if (id[0] != 'C') {
+		if (id[0] != 'C') { // Checks if first char is C
 			cout << "Account IDs must begin with C" << endl;
 			valid = false;
 		}
 
-		for (int i = 1; i < 4; i++) {
+		for (int i = 1; i < 4; i++) { // Checks if rest is numerical
 			if (!(id[i] >= '0' && id[i] <= '9')) {
 				valid = false;
 				letters = true;
 			}
 		}
 
-		if (letters) cout << "Account IDs must only contains number beyond 'C'" << endl;
+		if (letters) cout << "Account IDs must only contains number beyond 'C'" << endl; // has letter
 	}
 
 	return valid;
 }
 
 bool isInt(string s) {
+	// Checks if string can be converted to int
+
 	bool valid = true;
 
 	for (size_t i = 0; i < s.size(); i++) {
@@ -187,6 +195,8 @@ bool isInt(string s) {
 }
 
 bool isDouble(string s) {
+	// Checks if string can be converted to double
+
 	bool valid = true;
 	int decCount = 0;
 
@@ -207,7 +217,10 @@ bool isDouble(string s) {
 }
 
 void itemCRUD(ItemLinkedList * list) {
-	bool cancel;
+	// For adding, editing, deleting items. Also for updating stock
+
+	bool cancel; // Loop variable so user can cancel at any time
+
 	string userInput;
 	string newId = "N/A";
 	string newTitle = "N/A";
@@ -216,6 +229,8 @@ void itemCRUD(ItemLinkedList * list) {
 	int newStock = 0;
 	double newRentFee = 0;
 	string newGenre = "N/A";
+	// New values. Used for all functions
+
 	while (true) {
 		cancel = false;
 		newId = "N/A";
@@ -225,6 +240,7 @@ void itemCRUD(ItemLinkedList * list) {
 		newStock = 0;
 		newRentFee = 0;
 		newGenre = "N/A";
+		// Reset all values
 
 		cout << "Enter an option below" << endl;
 		cout << "1.Add a new item" << endl;
@@ -235,6 +251,8 @@ void itemCRUD(ItemLinkedList * list) {
 		cout << "Input: ";
 		cin >> userInput;
 		printDivider();
+
+		// if user type exit, break and return to main menu
 		if (userInput == "exit" || userInput == "Exit") {
 			break;
 		}
@@ -242,19 +260,19 @@ void itemCRUD(ItemLinkedList * list) {
 		else if (userInput == "1") {
 			// Add item
 			cout << "Current items" << endl;
-			list->displayAllFormatted();
+			list->displayAllFormatted(); // item list
 			printDivider();
 
 			cout << "Adding a new item. Type 'Exit' at anytime to stop" << endl;
-			cout << "Please input the item's ID in the format of IXXX-YEAR:" << endl;
-			
-			while (!cancel) {
+
+			if (!cancel) cout << "Please input the item's ID in the format of IXXX-YEAR:" << endl;
+			while (!cancel) { // Loop for inputing ID
 				cout << "Input: ";
 				cin >> userInput;
 				if (userInput == "exit" || userInput == "Exit") {
 					cancel = true;
 				}
-				else if (validateItemId(userInput)) {
+				else if (validateItemId(userInput)) { // validates
 					if (list->findById(userInput) == NULL) {
 						newId = userInput;
 						break;
@@ -266,8 +284,8 @@ void itemCRUD(ItemLinkedList * list) {
 				
 			}
 
-			if (!cancel) cout << "Please input the item's title:" << endl;
-			while (!cancel) {
+			if (!cancel) cout << "Please input the item's title:" << endl; 
+			while (!cancel) { // Loop for inputing title. No validation since who knows what could be a video title?
 				cout << "Input: ";
 				cin.ignore();
 				getline(cin, userInput);
@@ -286,7 +304,7 @@ void itemCRUD(ItemLinkedList * list) {
 				cout << "2.Record" << endl;
 				cout << "2.DVD" << endl;
 			}
-			while (!cancel) {
+			while (!cancel) { // Loop for inputing rent type. Selection menu so can handle possible data easier
 				cout << "Input: ";
 				cin >> userInput;
 				if (userInput == "exit" || userInput == "Exit") {
@@ -314,7 +332,7 @@ void itemCRUD(ItemLinkedList * list) {
 				cout << "1.2-day" << endl;
 				cout << "2.1-week" << endl;
 			}
-			while (!cancel) {
+			while (!cancel) { // Loop for inputing loan type. Selection menu so can handle possible data easier
 				cout << "Input: ";
 				cin >> userInput;
 				if (userInput == "exit" || userInput == "Exit") {
@@ -334,32 +352,32 @@ void itemCRUD(ItemLinkedList * list) {
 			}
 
 			if (!cancel) cout << "Please input the item's current stock:" << endl;
-			while (!cancel) {
+			while (!cancel) { // Loop for inputing stock.
 				cout << "Input: ";
 				cin >> userInput;
 				if (userInput == "exit" || userInput == "Exit") {
 					cancel = true;
 				}
-				else if (isInt(userInput)) {
+				else if (isInt(userInput)) { // validates
 					newStock = stoi(userInput);
 					break;
 				}
 			}
 
 			if (!cancel) cout << "Please input the item's rental fee:" << endl;
-			while (!cancel) {
+			while (!cancel) { // Loop for inputing fee.
 				cout << "Input: ";
 				cin >> userInput;
 				if (userInput == "exit" || userInput == "Exit") {
 					cancel = true;
 				}
-				else if (isDouble(userInput)) {
+				else if (isDouble(userInput)) { // validates
 					newRentFee = stod(userInput);
 					break;
 				}
 			}
 
-			if (!cancel && (newRentType != "Game")) cout << "Please input the item's genre:" << endl;
+			if (!cancel && (newRentType != "Game")) cout << "Please input the item's genre:" << endl; // If not game, input genre
 			while (!cancel && (newRentType != "Game")) {
 				cout << "Input: ";
 				cin >> userInput;
@@ -373,8 +391,8 @@ void itemCRUD(ItemLinkedList * list) {
 			}
 
 			if (!cancel) {
-				Item* newItem = new Item(newId, newTitle, newRentType, newLoanType, newStock, newRentFee, newGenre);
-				list->add(newItem);
+				Item* newItem = new Item(newId, newTitle, newRentType, newLoanType, newStock, newRentFee, newGenre); // Create new item
+				list->add(newItem); // Add item ptr to list
 				cout << "The following item was added" << endl;
 				cout << *newItem << endl;
 				printDivider();
@@ -398,14 +416,14 @@ void itemCRUD(ItemLinkedList * list) {
 					cancel = true;
 				}
 				else {
-					Item* item = list->findById(userInput);
-					if (item != NULL) {
+					Item* item = list->findById(userInput); // Tries to find item
+					if (item != NULL) { // If item found
 						printDivider();
 						cout << "Editing item with ID " << item->getId() << endl;
 						cout << *item << endl;
 
 						if (!cancel) cout << "Please input the item's new title:" << endl;
-						while (!cancel) {
+						while (!cancel) { // New title loop
 							cout << "Input: ";
 							cin.ignore();
 							getline(cin, userInput);
@@ -424,7 +442,7 @@ void itemCRUD(ItemLinkedList * list) {
 							cout << "2.Record" << endl;
 							cout << "2.DVD" << endl;
 						}
-						while (!cancel) {
+						while (!cancel) { // New type loop
 							cout << "Input: ";
 							cin >> userInput;
 							if (userInput == "exit" || userInput == "Exit") {
@@ -452,7 +470,7 @@ void itemCRUD(ItemLinkedList * list) {
 							cout << "1.2-day" << endl;
 							cout << "2.1-week" << endl;
 						}
-						while (!cancel) {
+						while (!cancel) { // New loan type loop
 							cout << "Input: ";
 							cin >> userInput;
 							if (userInput == "exit" || userInput == "Exit") {
@@ -472,7 +490,7 @@ void itemCRUD(ItemLinkedList * list) {
 						}
 
 						if (!cancel) cout << "Please input the item's new stock:" << endl;
-						while (!cancel) {
+						while (!cancel) { // New stock loop
 							cout << "Input: ";
 							cin >> userInput;
 							if (userInput == "exit" || userInput == "Exit") {
@@ -485,7 +503,7 @@ void itemCRUD(ItemLinkedList * list) {
 						}
 
 						if (!cancel) cout << "Please input the item's new rental fee:" << endl;
-						while (!cancel) {
+						while (!cancel) { // New fee loop
 							cout << "Input: ";
 							cin >> userInput;
 							if (userInput == "exit" || userInput == "Exit") {
@@ -497,7 +515,7 @@ void itemCRUD(ItemLinkedList * list) {
 							}
 						}
 
-						if (!cancel && (newRentType != "Game")) cout << "Please input the item's new genre:" << endl;
+						if (!cancel && (newRentType != "Game")) cout << "Please input the item's new genre:" << endl; // If is not game, new genre loop
 						while (!cancel && (newRentType != "Game")) {
 							cout << "Input: ";
 							cin >> userInput;
@@ -511,6 +529,7 @@ void itemCRUD(ItemLinkedList * list) {
 						}
 
 						if (!cancel) {
+							// Sets new item atrributes
 							item->setTitle(newTitle);
 							item->setRentType(newRentType);
 							item->setLoanType(newLoanType);
@@ -530,7 +549,7 @@ void itemCRUD(ItemLinkedList * list) {
 			}
 		}
 		else if (userInput == "3") {
-		// Edit item
+		// Update stock. Similar to edit item except it's only the stock
 		cout << "Current items" << endl;
 		list->displayAllFormatted();
 		printDivider();
@@ -590,9 +609,9 @@ void itemCRUD(ItemLinkedList * list) {
 					cancel = true;
 				}
 				else {
-					Item* item = list->findById(userInput);
+					Item* item = list->findById(userInput); // Find item
 					if (item != NULL) {
-						cout << "You're about to delete the following item. Confirm? (y). Type 'Exit' to cancel" << endl;
+						cout << "You're about to delete the following item. Confirm? (y). Type 'Exit' to cancel" << endl; // Confirm deletion
 						cout << *item << endl;
 
 						while (!cancel) {
@@ -602,7 +621,7 @@ void itemCRUD(ItemLinkedList * list) {
 								cancel = true;
 							}
 							else if (userInput == "y") {
-								list->remove(item);
+								list->remove(item); // This deletes the item itself, not just the linkedlist node
 								cout << "The item has been removed" << endl;
 								printDivider();
 								cancel = true;
@@ -623,6 +642,7 @@ void itemCRUD(ItemLinkedList * list) {
 }
 
 void userCRUD(AccountLinkedList * list) {
+	// Handles adding new users and editing current users
 	string userInput;
 	bool cancel;
 	string newType = "N/A";
@@ -723,7 +743,6 @@ void userCRUD(AccountLinkedList * list) {
 			if (!cancel) cout << "Please input the customer's address:" << endl;
 			while (!cancel) {
 				cout << "Input: ";
-				//cin.ignore();
 				getline(cin, userInput);
 				if (userInput == "exit" || userInput == "Exit") {
 					cancel = true;
@@ -749,6 +768,8 @@ void userCRUD(AccountLinkedList * list) {
 
 			if (!cancel) {
 				Account* newAcc = new Guest();
+
+				// Creates new account based on type input
 				if (newType == "VIP"){
 					delete newAcc;
 					newAcc = new VIP(newId, newName, newAddress, newPhone);
@@ -770,7 +791,7 @@ void userCRUD(AccountLinkedList * list) {
 				
 			}
 			else {
-				cout << "Add item canceled. Returning" << endl;
+				cout << "Add account canceled. Returning" << endl;
 				printDivider();
 			}
 		}
@@ -873,6 +894,7 @@ void userCRUD(AccountLinkedList * list) {
 }
 
 void promoteMenu(AccountLinkedList* accountList) {
+	// Handles account promotion
 	string userInput;
 	while (true) {
 		accountList->displayAllFormatted();
@@ -891,24 +913,27 @@ void promoteMenu(AccountLinkedList* accountList) {
 			}
 			else {
 				if (ptr->getType() == "VIP") {
-					cout << "The selected customer (" << ptr->getId() << ") is already at VIP status" << endl;
+					cout << "The selected customer (" << ptr->getId() << ") is already at VIP status" << endl; // Already VIP. Can't upgrade
 				}
 				else {
-					if (ptr->getNumReturned() >= 3) {
+					if (ptr->getNumReturned() >= 3) { // If successful rental is 3 or more
 						if (ptr->getType() == "regular") {
+							// Creates new VIP account
 							Account* newAcc = new VIP(ptr);
 							newAcc->setNumReturned(newAcc->getNumReturned() - 3); // Lowering num of successful returns so customer can't just be promoted twice
-							accountList->add(newAcc);
+							
+							accountList->add(newAcc); // Adds new VIP account to list
 							cout << "The selected customer (" << ptr->getId() << ") has been promoted to VIP status" << endl;
-							accountList->remove(ptr);
+							accountList->remove(ptr); // Remove old account
 
 						}
 						else if (ptr->getType() == "guest") {
+							// Creates new regular account
 							Account* newAcc = new Regular(ptr);
 							newAcc->setNumReturned(newAcc->getNumReturned() - 3); // Lowering num of successful returns so customer can't just be promoted twice
-							accountList->add(newAcc);
+							accountList->add(newAcc); // Adds new regular account to list
 							cout << "The selected customer (" << ptr->getId() << ") has been promoted to regular status" << endl;
-							accountList->remove(ptr);
+							accountList->remove(ptr);// Remove old account
 						}
 					}
 					else {
@@ -921,6 +946,8 @@ void promoteMenu(AccountLinkedList* accountList) {
 }
 
 void rentMenu(AccountLinkedList* accountList, ItemLinkedList* itemList) {
+	// Rent items
+
 	string userInput;
 	bool cancel = false;
 
@@ -935,7 +962,7 @@ void rentMenu(AccountLinkedList* accountList, ItemLinkedList* itemList) {
 			Account* acc = accountList->findById(userInput);
 			if (acc != NULL) {
 				cout << "The following account is currently selected" << endl;
-				cout << acc->getId() << " | " << acc->getName() << " | " << acc->getAddress() << " | " << acc->getPhone() << " | " << acc->getNumReturned() << endl;
+				cout << acc->getId() << " | " << acc->getName() << " | " << acc->getAddress() << " | " << acc->getPhone() << " | " << acc->getNumReturned() << endl; // Choose account to rent with. Real system should probably have some sort of login
 
 				printDivider();
 
@@ -951,26 +978,26 @@ void rentMenu(AccountLinkedList* accountList, ItemLinkedList* itemList) {
 					}
 					else {
 						Item* item = itemList->findById(userInput);
-						if (item != NULL) {
+						if (item != NULL) { // If item found
 							cout << "You've selected the following item" << endl;
 							cout << *item << endl;
-							if (item->getStock() <= 0) {
+							if (item->getStock() <= 0) { // If out of stock
 								cout << "That item is currently out of stock. Please check again later" << endl;
 								cancel = true;
 							}
 							else {
-								if (acc->getType() == "guest" && acc->getList()->getSize() >= 2) {
+								if (acc->getType() == "guest" && acc->getList()->getSize() >= 2) { // If guest account has 2 or more items in the rentlist
 									cout << "You've reached the rental limit of your guest account. Please return your currently rented items first" << endl;
 									cancel = true;
 								}
-								else if (acc->getType() == "guest" && item->getLoanType() == "2-day") {
+								else if (acc->getType() == "guest" && item->getLoanType() == "2-day") { // if guest tries to borrow 2-day items
 									cout << "You cannot borrow 2-day items as a guest account" << endl;
 									cancel = true;
 								}
 								else {
 									bool free = false;
-									if (acc->getType() == "VIP" && acc->getNumReturned() >= 10) {
-										cout << "As a VIP, you have successfully accumulated enough points to make a free rental. Would you like to use your points for this rental? (y/n)" << endl;
+									if (acc->getType() == "VIP" && acc->getNumReturned() >= 10) { // If VIP has enough "points"
+										cout << "As a VIP, you have successfully accumulated enough points to make a free rental. Would you like to use your points for this rental? (y/n)" << endl; // Checks if they want to rent for free
 											while (!cancel) {
 												cin >> userInput;
 												if (userInput == "exit" || userInput == "Exit") {
@@ -987,7 +1014,7 @@ void rentMenu(AccountLinkedList* accountList, ItemLinkedList* itemList) {
 									}
 
 									printDivider();
-									cout << "You're renting the following item" << endl;
+									cout << "You're renting the following item" << endl; // Confirmation
 									cout << *item << endl;
 									if (free) {
 										cout << "Total: 0 $ (Free)" << endl;
@@ -1005,7 +1032,7 @@ void rentMenu(AccountLinkedList* accountList, ItemLinkedList* itemList) {
 											}
 											else if (userInput == "y") {
 												acc->renting(item);
-												if (free) acc->setNumReturned(acc->getNumReturned()-10);
+												if (free) acc->setNumReturned(acc->getNumReturned()-10); // If VIP used points, remove "points"
  												cout << "Thank you for using our services. Have a nice day" << endl;
 												printDivider();
 												cancel = true;
@@ -1035,6 +1062,8 @@ void rentMenu(AccountLinkedList* accountList, ItemLinkedList* itemList) {
 }
 
 void returnMenu(AccountLinkedList* accountList, ItemLinkedList* itemList) {
+	// Return items. Similar to rent
+
 	string userInput;
 	bool cancel = false;
 
@@ -1132,7 +1161,7 @@ int main(int argc, char* argv[])
 	ItemLinkedList itemList;
 
 	string s1;
-	while (getline(itemFileStr, s1)) {
+	while (getline(itemFileStr, s1)) { // Parse items into the list
 		if (s1[0] != '#') {
 			Item temp = parseItem(s1);
 			Item *item = new Item();
@@ -1140,11 +1169,12 @@ int main(int argc, char* argv[])
 			itemList.add(item);
 		}
 	}
+
 	AccountLinkedList accountList;
 
 	string s2;
 	Account* currentPtr = NULL;
-	while (getline(cusFileStr, s2)) {
+	while (getline(cusFileStr, s2)) { // Parse accounts and rented items into a list;
 		if (s2[0] != '#') {
 			if (s2[0] == 'C') {
 
@@ -1205,8 +1235,8 @@ int main(int argc, char* argv[])
 			}
 			else if ((s2[0] == 'I') && (currentPtr != NULL)){
 				Item* ptr = itemList.findById(s2);
-				if (ptr != NULL) {
-					currentPtr->addItem(ptr);
+				if (ptr != NULL) { // If item found add to account rentlist. Otherwise do nothing
+					currentPtr->addItem(ptr); // This does not change stock
 				}
 				else {
 					cout << "failed to find " << s2 << endl;
@@ -1223,13 +1253,9 @@ int main(int argc, char* argv[])
 	itemFileStr.close();
 	cusFileStr.close();
 
-	//accountList.displayAll();
-	/*itemList.displayAll();
-	cout << itemList.getSize();*/
-
 	printDivider();
 
-	while (true) {
+	while (true) { // Top loop
 		string userInput;
 		printMainMenu();
 		cout << "Input: ";
@@ -1414,7 +1440,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	else {
-		itemList.writeToStream(itemOutFileStr);
+		itemList.writeToStream(itemOutFileStr); // pass stream to write function
 		cout << itemFileName << " successfully written" << endl;
 	}
 
@@ -1424,7 +1450,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	else {
-		accountList.writeToStream(cusOutFileStr);
+		accountList.writeToStream(cusOutFileStr); // pass stream to write function
 		cout << cusFileName << " successfully written" << endl;
 	}
 	
