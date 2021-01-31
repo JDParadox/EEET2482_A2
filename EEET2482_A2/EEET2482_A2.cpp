@@ -229,7 +229,8 @@ void itemCRUD(ItemLinkedList * list) {
 		cout << "Enter an option below" << endl;
 		cout << "1.Add a new item" << endl;
 		cout << "2.Update an existing item" << endl;
-		cout << "3.Delete an existing item" << endl;
+		cout << "3.Update an existing item's stock" << endl;
+		cout << "4.Delete an existing item" << endl;
 		cout << "Type 'Exit' to return" << endl;
 		cout << "Input: ";
 		cin >> userInput;
@@ -529,6 +530,53 @@ void itemCRUD(ItemLinkedList * list) {
 			}
 		}
 		else if (userInput == "3") {
+		// Edit item
+		cout << "Current items" << endl;
+		list->displayAllFormatted();
+		printDivider();
+
+		cout << "Please input the ID of the item you would like to edit. Type 'Exit' to cancel at anytime" << endl;
+		while (!cancel) {
+			cout << "Input: ";
+			cin >> userInput;
+			if (userInput == "exit" || userInput == "Exit") {
+				cancel = true;
+			}
+			else {
+				Item* item = list->findById(userInput);
+				if (item != NULL) {
+					printDivider();
+					cout << "Editing item with ID " << item->getId() << endl;
+					cout << *item << endl;
+
+					if (!cancel) cout << "Please input the item's new stock:" << endl;
+					while (!cancel) {
+						cout << "Input: ";
+						cin >> userInput;
+						if (userInput == "exit" || userInput == "Exit") {
+							cancel = true;
+						}
+						else if (isInt(userInput)) {
+							newStock = stoi(userInput);
+							break;
+						}
+					}
+
+					if (!cancel) {
+						item->setStock(newStock);
+						cout << "The following item was successfully edited" << endl;
+						cout << *item << endl;
+						printDivider();
+						break;
+					}
+				}
+				else {
+					cout << "Item not found. Please try again." << endl;
+				}
+			}
+		}
+		}
+		else if (userInput == "4") {
 			// Delete item
 			cout << "Current items" << endl;
 			list->displayAllFormatted();

@@ -6,4 +6,3 @@ I005-2015,Halo,Game,2-day,2,4.99
 I006-2013,Halloween,DVD,2-day,1,0.99,Horror
 I008-2013,Halloween,DVD,2-day,1,0.99,Horror
 I009-2013,Halloween,DVD,2-day,1,0.99,Horror
-I010-2020,Lost,Record,1-week,5,1.99,Horror
