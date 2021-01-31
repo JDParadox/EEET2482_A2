@@ -384,12 +384,188 @@ void itemCRUD(ItemLinkedList * list) {
 			}
 		}
 		else if (userInput == "2") {
-			// Return item
-			cout << 5;
+			// Edit item
+			cout << "Current items" << endl;
+			list->displayAllFormatted();
+			printDivider();
+
+			cout << "Please input the ID of the item you would like to edit. Type 'Exit' to cancel at anytime" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					Item* item = list->findById(userInput);
+					if (item != NULL) {
+						printDivider();
+						cout << "Editing item with ID " << item->getId() << endl;
+						cout << *item << endl;
+
+						if (!cancel) cout << "Please input the item's new title:" << endl;
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin.ignore();
+							getline(cin, userInput);
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else {
+								newTitle = userInput;
+								break;
+							}
+						}
+
+						if (!cancel) {
+							cout << "Please select the item's new type:" << endl;
+							cout << "1.Game" << endl;
+							cout << "2.Record" << endl;
+							cout << "2.DVD" << endl;
+						}
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else if (userInput == "1") {
+								newRentType = "Game";
+								break;
+							}
+							else if (userInput == "2") {
+								newRentType = "Record";
+								break;
+							}
+							else if (userInput == "3") {
+								newRentType = "DVD";
+								break;
+							}
+							else {
+								cout << "Invalid option. Please try again" << endl;
+							}
+						}
+
+						if (!cancel) {
+							cout << "Please select the item's new loan type:" << endl;
+							cout << "1.2-day" << endl;
+							cout << "2.1-week" << endl;
+						}
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else if (userInput == "1") {
+								newLoanType = "2-day";
+								break;
+							}
+							else if (userInput == "2") {
+								newLoanType = "1-week";
+								break;
+							}
+							else {
+								cout << "Invalid option. Please try again" << endl;
+							}
+						}
+
+						if (!cancel) cout << "Please input the item's new stock:" << endl;
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else if (isInt(userInput)) {
+								newStock = stoi(userInput);
+								break;
+							}
+						}
+
+						if (!cancel) cout << "Please input the item's new rental fee:" << endl;
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else if (isDouble(userInput)) {
+								newRentFee = stod(userInput);
+								break;
+							}
+						}
+
+						if (!cancel && (newRentType != "Game")) cout << "Please input the item's new genre:" << endl;
+						while (true && !cancel && (newRentType != "Game")) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else {
+								newGenre = userInput;
+								break;
+							}
+						}
+
+						if (!cancel) {
+							item->setTitle(newTitle);
+							item->setRentType(newRentType);
+							item->setLoanType(newLoanType);
+							item->setStock(newStock);
+							item->setRentFee(newRentFee);
+							item->setGenre(newGenre);
+							cout << "The following item was successfully edited" << endl;
+							cout << *item << endl;
+							printDivider();
+							break;
+						}
+					}
+					else {
+						cout << "Item not found. Please try again." << endl;
+					}
+				}
+			}
 		}
 		else if (userInput == "3") {
-			// Return item
-			cout << 5;
+			// Delete item
+			cout << "Current items" << endl;
+			list->displayAllFormatted();
+			printDivider();
+
+			cout << "Please input the ID of the item you would like to delete. Type 'Exit' to cancel at anytime" << endl;
+			while (true && !cancel) {
+				cout << "Input: ";
+				cin >> userInput;
+				if (userInput == "exit" || userInput == "Exit") {
+					cancel = true;
+				}
+				else {
+					Item* item = list->findById(userInput);
+					if (item != NULL) {
+						cout << "You're about to delete the following item. Confirm? (y). Type 'Exit' to cancel" << endl;
+						cout << *item << endl;
+
+						while (true && !cancel) {
+							cout << "Input: ";
+							cin >> userInput;
+							if (userInput == "exit" || userInput == "Exit") {
+								cancel = true;
+							}
+							else if (userInput == "y") {
+								list->remove(item);
+								cout << "The item has been removed" << endl;
+								printDivider();
+								cancel = true;
+							}
+						}
+					}
+					else {
+						cout << "Item not found. Please try again." << endl;
+					}
+				}
+			}
 		}
 		else {
 			cout << "Invalid option. Please try again" << endl;

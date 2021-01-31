@@ -89,6 +89,35 @@ void ItemLinkedList::add(Item* item) {
 	}
 }
 
+void ItemLinkedList::remove(Item* item) {
+	ItemNode* temp;
+
+	if (head != NULL && head->getData() == item) {
+		temp = head;
+		head == head->getNext();
+		delete temp->getData(); // Deleting the item itself
+		//temp->setData(NULL);
+		delete temp;
+		temp = NULL;
+		return;
+	}
+
+	ItemNode* currentPtr = head;
+	while (currentPtr != NULL) {
+		//cout << id << " " << currentPtr->getData()->getId() << endl;
+		if (currentPtr->getNext()->getData() == item) {
+			// Find node before target
+			temp = currentPtr->getNext();
+			currentPtr->setNext(temp->getNext());
+			delete temp->getData();
+			delete temp;
+			temp = NULL;
+			return;
+		}
+		currentPtr = currentPtr->getNext();;
+	}
+}
+
 void ItemLinkedList::displayAll() {
 	ItemNode* currentPtr = head;
 	if (currentPtr == NULL) cout << "List is empty" << endl; 
@@ -197,47 +226,27 @@ void ItemLinkedList::displayOutOfStockFormatted() {
 Item* ItemLinkedList::findById(string id) {
 	int index = 0;
 	ItemNode* currentPtr = head;
-	/*if (currentPtr == NULL) cout << "List is empty" << endl;
-	else {
-		while (currentPtr != NULL) {
-			if (currentPtr->getId() == id) return currentPtr;
-			else currentPtr = currentPtr->getNext();
-		}
-		return NULL;
-	}*/
 
 	while (currentPtr != NULL) {
-		//cout << id << " " << currentPtr->getData()->getId() << endl;
 		if (currentPtr->getData()->getId().compare(id) == 0) {
-			//If element found return index
+			//If element found return item
 			return currentPtr->getData();
 		}
 		currentPtr = currentPtr->getNext();
-		index++;
 	}
 	return NULL;
 }
 
 Item* ItemLinkedList::findByTitle(string title) {
-	int index = 0;
 	ItemNode* currentPtr = head;
-	/*if (currentPtr == NULL) cout << "List is empty" << endl;
-	else {
-		while (currentPtr != NULL) {
-			if (currentPtr->getId() == id) return currentPtr;
-			else currentPtr = currentPtr->getNext();
-		}
-		return NULL;
-	}*/
 
 	while (currentPtr != NULL) {
 		//cout << id << " " << currentPtr->getData()->getId() << endl;
 		if (currentPtr->getData()->getTitle().compare(title) == 0) {
-			//If element found return index
+			//If element found return item
 			return currentPtr->getData();
 		}
 		currentPtr = currentPtr->getNext();
-		index++;
 	}
 	return NULL;
 }

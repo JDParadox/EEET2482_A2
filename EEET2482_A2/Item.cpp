@@ -116,6 +116,12 @@ void Item::setLoanType(string loanType) {
 
 void Item::setStock(int stock) {
 	this->stock = stock;
+	if (stock <= 0) {
+		this->rentStatus = "borrowed";
+	}
+	else {
+		this->rentStatus = "available";
+	}
 }
 
 void Item::setRentFee(double rentFee) {

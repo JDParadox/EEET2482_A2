@@ -33,7 +33,7 @@ public:
 	friend ostream& operator<<(ostream& os, ItemLinkedList& list);
 
 	void add(Item* item);
-	//void removeTail(); 
+	void remove(Item* item);
 	void displayAll();
 	void displayAllFormatted();
 	void displayOutOfStockFormatted();
