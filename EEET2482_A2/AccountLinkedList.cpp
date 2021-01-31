@@ -246,3 +246,15 @@ Account* AccountLinkedList::findByName(string name) {
 	}
 	return NULL;
 }
+
+void AccountLinkedList::writeToStream(ofstream& fileStr) {
+	AccountNode* currentPtr = head;
+	AccountNode* temp;
+	while (currentPtr != NULL) {
+		if (currentPtr->getData() != NULL) {
+			fileStr << currentPtr->getData()->getId() << "," << currentPtr->getData()->getName() << "," << currentPtr->getData()->getAddress() << "," << currentPtr->getData()->getPhone() << "," << currentPtr->getData()->getNumReturned() << "," << currentPtr->getData()->getType() << endl;
+			currentPtr->getData()->getList()->writeIdToStream(fileStr);
+			currentPtr = currentPtr->getNext();
+		}
+	}
+}

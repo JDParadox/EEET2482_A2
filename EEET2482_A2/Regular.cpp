@@ -22,13 +22,13 @@ Regular::Regular(string id, string name, string address, string phone, int numRe
 }
 
 Regular::Regular(Account* guest) : Account(guest->getId(), guest->getName(), guest->getAddress(), guest->getPhone(), guest->getNumRented(), guest->getNumReturned(), "regular") {
-	this->rentList = guest->getList();
+	this->rentList = *guest->getList();
 }
 
-bool Regular::renting(Item* item) {
-	return true;
-}
-
-bool Regular::returning(Item* item) {
-	return true;
-}
+//bool Regular::renting(Item* item) {
+//	return true;
+//}
+//
+//bool Regular::returning(Item* item) {
+//	return true;
+//}

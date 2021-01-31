@@ -22,8 +22,8 @@ public:
 	// Setters
 
 	// Methods
-	bool renting(Item* item);
-	bool returning(Item* item);
+	/*bool renting(Item* item);
+	bool returning(Item* item);*/
 
 private:
 };

@@ -3,6 +3,8 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 #include "LinkedList.h"
 #include "Account.h"
@@ -43,4 +45,6 @@ public:
 	void displayAllByTypeFormatted(string type);
 	Account* findById(string id);
 	Account* findByName(string name);
+	
+	void writeToStream(ofstream& fileStr);
 };

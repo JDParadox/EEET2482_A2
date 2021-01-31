@@ -21,13 +21,15 @@ Guest::Guest(string id, string name, string address, string phone, int numRented
 	}*/
 }
 
-bool Guest::renting(Item* item) {
-	return true;
-}
-
-bool Guest::returning(Item* item) {
-	return true;
-}
+//bool Guest::renting(Item* item) {
+//	rentList.add(item);
+//	item->setStock(item->getStock()-1);
+//}
+//
+//bool Guest::returning(Item* item) {
+//	rentList.removeNode(item);
+//	item->setStock(item->getStock() - 1);
+//}
 
 //bool Guest::addItem(Item* item) {
 //	rentList.add(item);

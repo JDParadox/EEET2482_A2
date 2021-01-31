@@ -24,7 +24,7 @@ public:
 	int getNumRented();
 	int getNumReturned();
 	string getType();
-	ItemLinkedList getList();
+	ItemLinkedList* getList();
 
 	// Setters
 	void setId(string id);
@@ -37,8 +37,8 @@ public:
 	void setList(ItemLinkedList list);
 
 	// Methods
-	virtual bool renting(Item* item) = 0;
-	virtual bool returning(Item* item) = 0;
+	bool renting(Item* item);
+	bool returning(Item* item);
 	bool addItem(Item* item); // System method for addding an item without changing any stock value for use during intial loading
 	void printItems();
 

@@ -68,8 +68,8 @@ string Account::getType() {
 	return this->type;
 }
 
-ItemLinkedList Account::getList() {
-	return this->rentList;
+ItemLinkedList* Account::getList() {
+	return &this->rentList;
 }
 
 void Account::setId(string id) {
@@ -111,4 +111,19 @@ bool Account::addItem(Item* item) {
 
 void Account::printItems() {
 	rentList.displayAll();
+}
+
+bool Account::renting(Item* item) {
+	rentList.add(item);
+	item->setStock(item->getStock() - 1);
+	this->numRented++;
+	return true;
+}
+
+bool Account::returning(Item* item) {
+	rentList.removeNode(item);
+	item->setStock(item->getStock() + 1);
+	this->numRented--;
+	this->numReturned++;
+	return true;
 }

@@ -21,14 +21,14 @@ VIP::VIP(string id, string name, string address, string phone, int numRented, in
 	}*/
 }
 
-VIP::VIP(Account* guest) : Account(guest->getId(), guest->getName(), guest->getAddress(), guest->getPhone(), guest->getNumRented(), guest->getNumReturned(), "regular") {
-	this->rentList = guest->getList();
+VIP::VIP(Account* reg) : Account(reg->getId(), reg->getName(), reg->getAddress(), reg->getPhone(), reg->getNumRented(), reg->getNumReturned(), "VIP") {
+	this->rentList = *reg->getList();
 }
 
-bool VIP::renting(Item* item) {
-	return true;
-}
-
-bool VIP::returning(Item* item) {
-	return true;
-}
+//bool VIP::renting(Item* item) {
+//	return true;
+//}
+//
+//bool VIP::returning(Item* item) {
+//	return true;
+//}

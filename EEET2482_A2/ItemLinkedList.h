@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 #include "LinkedList.h"
 #include "Item.h"
@@ -32,11 +34,17 @@ public:
 
 	friend ostream& operator<<(ostream& os, ItemLinkedList& list);
 
+	int getSize();
 	void add(Item* item);
 	void remove(Item* item);
+	void removeNode(ItemNode* node);
+	void removeNode(Item* item);
 	void displayAll();
 	void displayAllFormatted();
 	void displayOutOfStockFormatted();
 	Item* findById(string id);
 	Item* findByTitle(string title);
+
+	void writeToStream(ofstream& fileStr);
+	void writeIdToStream(ofstream& fileStr);
 };
